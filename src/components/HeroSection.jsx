@@ -57,7 +57,7 @@ export default function HeroSection() {
   const paperRotateX = useTransform(scrollYProgress, [0, 0.8], [0, 5]);
 
   return (
-    <section ref={containerRef} className="relative w-full overflow-hidden select-none m-0 p-0 perspective-[1200px]">
+    <section id="hero" ref={containerRef} className="relative w-full overflow-hidden select-none m-0 p-0 perspective-[1200px]">
       
       {/* 1. TOP SECTION: Full-Bleed Elevated White Paper Sheet (3D Scroll Perspective Lift) */}
       <motion.div
