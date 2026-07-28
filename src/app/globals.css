@@ -1,0 +1,75 @@
+@import "tailwindcss";
+
+:root {
+  --background: #122B1E;
+  --foreground: #0F172A;
+  --cutting-mat: #122B1E;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-plus-jakarta), system-ui, -apple-system, sans-serif;
+  --font-handwriting: var(--font-caveat), cursive;
+}
+
+html,
+body {
+  background-color: #122B1E;
+  color: #0F172A;
+  font-family: var(--font-plus-jakarta), -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", sans-serif;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.font-handwriting {
+  font-family: var(--font-caveat), cursive, sans-serif;
+}
+
+/* Full-Bleed Green Cutting Mat Grid (Exact match to Acctual reference) */
+.bg-cutting-mat {
+  background-color: #122B1E;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* Elevated Floating White Paper Sheet Drop Shadow */
+.shadow-elevated-paper {
+  box-shadow: 
+    0 32px 64px -16px rgba(0, 0, 0, 0.5),
+    0 12px 24px -8px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(0, 0, 0, 0.06);
+}
+
+/* Deep Cast Shadows for Sticky Notes on Green Mat */
+.shadow-cast-pink {
+  box-shadow: 
+    26px 32px 42px -6px rgba(0, 0, 0, 0.65),
+    8px 12px 18px -2px rgba(0, 0, 0, 0.35);
+}
+
+.shadow-cast-yellow {
+  box-shadow: 
+    28px 34px 44px -6px rgba(0, 0, 0, 0.65),
+    8px 12px 18px -2px rgba(0, 0, 0, 0.35);
+}
+
+/* Lenis Smooth Scroll CSS */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}

@@ -1,0 +1,148 @@
+===================================================================
+                  ANSHUMAN MISHRA — PORTFOLIO CONTENT
+===================================================================
+
+[01. HERO SECTION]
+-------------------------------------------------------------------
+Main Heading Options:
+  1. (Selected) "I make pixels behave. Sometimes people too."
+  2. "Designer by profession. Professional overthinker by passion."
+  3. "Making interfaces so good, users think they're obvious."
+
+Sub Heading:
+  "I design products, build them, break them, redesign them, 
+   question every pixel, and somehow end up shipping things 
+   people actually enjoy using.
+
+   Currently mixing Product Design, Frontend, AI, Motion, Branding, 
+   and a dangerous amount of caffeine."
+
+CTA Button:
+  "Judge My Work"
+
+
+[02. SLACK MESSAGE & STICKY NOTES]
+-------------------------------------------------------------------
+Slack Chat Popover Card:
+  Author: Anshuman
+  Status Badge: 🟢 probably designing instead of sleeping
+  Message: "Welcome to the portfolio. 
+           Warning: This website contains excessive animations, 
+           questionable humour, and unhealthy attention to 8px spacing."
+
+Pink Sticky Note (Pinned Left):
+  "Trust the process.
+   (unless the process was designed by me at 2 AM.)"
+
+Yellow Sticky Note (Pinned Right):
+  "Every designer has a favorite font.
+   Mine changes every Tuesday."
+
+Green Grid Badge:
+  "Built with ❤️ curiosity, ☕ caffeine, 😭 deadlines"
+
+
+[03. INTRO / ABOUT SECTION]
+-------------------------------------------------------------------
+Title: Who am I?
+
+Body:
+  "Hi. I'm Anshuman. I solve problems using design. 
+   Then I create three new ones because I wanted the button 2px lower.
+
+   I enjoy turning complex products into experiences that don't 
+   make users want to uninstall the app.
+
+   Some people collect sneakers. I collect unfinished side projects."
+
+
+[04. PROJECTS SECTION]
+-------------------------------------------------------------------
+Project 1: 🍎 Apple Music Redesign
+  Tag: Case Study / UX
+  Description: "Apple made music beautiful. I wondered... 
+               'What if finding your favorite playlist didn't feel 
+               like hide and seek?' 
+               So I redesigned the experience with cleaner navigation, 
+               better playback flow, and interactions that don't require 
+               a treasure map."
+
+Project 2: 📷 Tasveer
+  Tag: Brand Identity / Community
+  Description: "Instagram... but photographers won't yell at you for 
+               posting JPEGs. 
+               Built a visual-first community focused on storytelling, 
+               critique, and portfolios instead of dopamine."
+
+Project 3: 🧠 Spatial OS
+  Tag: Spatial UI / Machine Learning
+  Description: "Imagine Figma... Unity... Machine Learning... and one 
+               developer questioning all his life choices. That."
+
+Project 4: Google DSC Hybrid Events
+  Tag: Design System & Community
+  Description: "Designed the visual identity behind hackathons, 
+               workshops, and events attended by hundreds of students. 
+               Lots of posters. Lots of deadlines. Even more coffee."
+
+
+[05. EXPERIENCE SECTION]
+-------------------------------------------------------------------
+Role 1: Product Designer Intern
+  Description: "Designed products. Asked 'Why?' approximately 642 times. 
+               Convinced developers that 'just one tiny animation' 
+               was absolutely necessary."
+
+Role 2: Southern Immigration — Product Designer
+  Description: "Designed user journeys smoother than airport security. 
+               (Okay... maybe smoother than government websites.)"
+
+Role 3: Google DSC — Graphic & Event Designer
+  Description: "Designed event identities. Created posters faster 
+               than people could decide the event date."
+
+
+[06. SKILLS SECTION (LITTLE JOKES)]
+-------------------------------------------------------------------
+Product Design:
+  "I move buttons until they 'feel right.' It's science. Trust me."
+
+Frontend:
+  "I know enough React to blame CSS. 
+   Enough CSS to blame JavaScript. 
+   Enough JavaScript to blame React."
+
+Motion:
+  "If it doesn't move... I'll probably animate it."
+
+Branding:
+  "Logos. Identity. Visual systems. 
+   And explaining why the logo shouldn't be 4x bigger."
+
+AI & ML:
+  "Teaching computers to think. Still working on teaching printers."
+
+Photography:
+  "I touch grass. Mostly to photograph it."
+
+
+[07. CONTACT SECTION]
+-------------------------------------------------------------------
+Headline:
+  "Let's build something cool. Or argue whether 16px is better 
+   than 20px. Either works."
+
+Subtext:
+  "Email me. Message me. Send memes. Recruiters get priority."
+
+
+[08. FOOTER COPY]
+-------------------------------------------------------------------
+Tagline:
+  "Designed. Developed. Overthought. Repeated."
+
+Copyright & Note:
+  "© 2026 Anshuman Mishra. 
+   No designers were harmed while making this portfolio. 
+   (Developers... we're still investigating.)"
+===================================================================
