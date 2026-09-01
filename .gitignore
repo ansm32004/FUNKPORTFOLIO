@@ -1,1 +1,29 @@
-node_modules
+# dependencies
+/node_modules
+/.pnpm
+/.yarn
+
+# next.js build output & turbopack cache
+/.next/
+/out/
+/build/
+
+# production
+/dist
+
+# debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# local env files
+.env*.local
+.env
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts

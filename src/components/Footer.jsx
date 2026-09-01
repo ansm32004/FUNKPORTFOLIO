@@ -36,14 +36,14 @@ export default function Footer() {
     <footer id="contact" className="relative z-10 py-20 px-6 sm:px-12 md:px-20 bg-cutting-mat border-t border-emerald-950/80">
       <div className="max-w-7xl mx-auto">
         <div className="bg-white rounded-3xl p-8 sm:p-14 shadow-2xl border border-slate-200 relative overflow-hidden">
-          
+
           {/* Main CTA Section */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center pb-12 border-b border-slate-200">
-            
+
             <div className="lg:col-span-7 space-y-6">
               <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-emerald-600">
                 <Mail className="w-4 h-4" />
-                <span>03 // Initiate Contact</span>
+                <span>08 // Initiate Contact</span>
               </div>
 
               <h2 className="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight">
@@ -124,10 +124,10 @@ export default function Footer() {
               <a href="https://twitter.com" target="_blank" rel="noreferrer" className="hover:text-slate-900 transition-colors">
                 Twitter / X
               </a>
-              <a href="https://github.com" target="_blank" rel="noreferrer" className="hover:text-slate-900 transition-colors">
+              <a href="https://github.com/ansm32004" target="_blank" rel="noreferrer" className="hover:text-slate-900 transition-colors">
                 GitHub
               </a>
-              <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="hover:text-slate-900 transition-colors">
+              <a href="https://linkedin.com/ansmfx" target="_blank" rel="noreferrer" className="hover:text-slate-900 transition-colors">
                 LinkedIn
               </a>
             </div>

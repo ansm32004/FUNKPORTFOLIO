@@ -1,10 +1,16 @@
-import { Plus_Jakarta_Sans, Caveat } from "next/font/google";
+import { Plus_Jakarta_Sans, Caveat, Poppins } from "next/font/google";
 import "./globals.css";
 
 const plusJakarta = Plus_Jakarta_Sans({
   variable: "--font-plus-jakarta",
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700", "800"],
+});
+
+const poppinsFont = Poppins({
+  variable: "--font-poppins",
+  subsets: ["latin"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
 
 const caveatFont = Caveat({
@@ -32,7 +38,7 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      className={`${plusJakarta.variable} ${caveatFont.variable} h-full antialiased`}
+      className={`${poppinsFont.variable} ${plusJakarta.variable} ${caveatFont.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-[#F6F7F9] text-[#1E293B] font-sans">
         {children}
