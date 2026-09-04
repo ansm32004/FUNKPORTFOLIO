@@ -127,7 +127,7 @@ export default function Footer() {
               <a href="https://github.com/ansm32004" target="_blank" rel="noreferrer" className="hover:text-slate-900 transition-colors">
                 GitHub
               </a>
-              <a href="https://linkedin.com/ansmfx" target="_blank" rel="noreferrer" className="hover:text-slate-900 transition-colors">
+              <a href="https://www.linkedin.com/in/ansmfx/" target="_blank" rel="noreferrer" className="hover:text-slate-900 transition-colors">
                 LinkedIn
               </a>
             </div>
