@@ -303,11 +303,11 @@ export default function GovtElectionCaseStudy() {
 
   return (
     <div className="min-h-screen bg-[#FAFBFD] text-slate-800 font-poppins pb-40 selection:bg-blue-600 selection:text-white">
-      
+
       {/* STICKY TOP HEADER NAVIGATION */}
       <header className="sticky top-0 z-50 bg-[#FAFBFD]/90 backdrop-blur-2xl border-b border-slate-200/60">
         <div className="max-w-7xl mx-auto px-6 sm:px-8 h-20 flex items-center justify-between relative">
-          
+
           <Link
             href="/"
             className="inline-flex items-center gap-2 text-xs font-semibold text-slate-500 hover:text-slate-900 transition-colors z-10"
@@ -321,11 +321,10 @@ export default function GovtElectionCaseStudy() {
             <div className="flex items-center bg-white p-1 rounded-full shadow-2xs border border-slate-200/80">
               <button
                 onClick={() => setActiveTab("case-study")}
-                className={`flex items-center gap-2 px-5 py-2 rounded-full text-xs font-semibold transition-all ${
-                  activeTab === "case-study"
+                className={`flex items-center gap-2 px-5 py-2 rounded-full text-xs font-semibold transition-all ${activeTab === "case-study"
                     ? "bg-slate-900 text-white shadow-2xs"
                     : "text-slate-500 hover:text-slate-900"
-                }`}
+                  }`}
               >
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>Editorial Case Study</span>
@@ -333,11 +332,10 @@ export default function GovtElectionCaseStudy() {
 
               <button
                 onClick={() => setActiveTab("simulator")}
-                className={`flex items-center gap-2 px-5 py-2 rounded-full text-xs font-semibold transition-all ${
-                  activeTab === "simulator"
+                className={`flex items-center gap-2 px-5 py-2 rounded-full text-xs font-semibold transition-all ${activeTab === "simulator"
                     ? "bg-slate-900 text-white shadow-2xs"
                     : "text-slate-500 hover:text-slate-900"
-                }`}
+                  }`}
               >
                 <MapPin className="w-3.5 h-3.5 text-blue-500" />
                 <span>Interactive Prototype</span>
@@ -384,7 +382,7 @@ export default function GovtElectionCaseStudy() {
                 </span>
                 <span className="text-[9px] bg-slate-100 px-1.5 py-0.5 rounded text-slate-500">10 SECTIONS</span>
               </div>
-              
+
               {[
                 { id: "overview", label: "02 Overview", short: "Overview" },
                 { id: "problem", label: "03 Problem", short: "Problem" },
@@ -404,11 +402,10 @@ export default function GovtElectionCaseStudy() {
                     onClick={() => {
                       scrollToSection(sec.id);
                     }}
-                    className={`w-full text-left flex items-center justify-between px-3 py-1.5 rounded-xl transition-all text-xs cursor-pointer ${
-                      isActive
+                    className={`w-full text-left flex items-center justify-between px-3 py-1.5 rounded-xl transition-all text-xs cursor-pointer ${isActive
                         ? "bg-slate-900 text-white font-bold shadow-xs"
                         : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 font-semibold"
-                    }`}
+                      }`}
                   >
                     <span>{sec.short}</span>
                     {isActive && <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />}
@@ -424,7 +421,7 @@ export default function GovtElectionCaseStudy() {
       {activeTab === "simulator" ? (
         <main className={isFullScreen ? "fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-xl p-4 sm:p-8 overflow-y-auto min-h-screen" : "w-full max-w-[1640px] mx-auto px-4 sm:px-8 py-8 space-y-6"}>
           <div className="bg-[#F8FAFC] border border-slate-200/90 rounded-3xl shadow-2xl overflow-hidden text-slate-800 font-sans">
-            
+
             {/* 1. TOP SUB-NAVBAR & BREADCRUMBS & FULLSCREEN TOGGLE */}
             <div className="bg-white border-b border-slate-200/80 px-6 sm:px-8 py-3.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
               <div className="flex items-center gap-2 text-slate-500 font-medium">
@@ -480,7 +477,7 @@ export default function GovtElectionCaseStudy() {
             {/* 3. BREADCRUMB LEVEL SELECTOR PILL */}
             <div className="px-6 sm:px-8 pb-6 flex items-center justify-between">
               <div className="inline-flex items-center gap-2 bg-white border border-slate-200/80 rounded-full px-4 py-1.5 shadow-2xs text-xs font-semibold text-slate-700">
-                <span 
+                <span
                   onClick={() => { setSelectedState(null); setSelectedAC(null); }}
                   className={`cursor-pointer transition-colors ${!selectedState ? "text-slate-900 font-bold" : "hover:text-blue-600"}`}
                 >
@@ -489,7 +486,7 @@ export default function GovtElectionCaseStudy() {
                 {selectedState && (
                   <>
                     <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
-                    <span 
+                    <span
                       onClick={() => setSelectedAC(null)}
                       className={`cursor-pointer transition-colors ${selectedState && !selectedAC ? "text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full font-bold" : "hover:text-blue-600"}`}
                     >
@@ -550,7 +547,7 @@ export default function GovtElectionCaseStudy() {
 
             {/* 5. MAIN DASHBOARD CONTENT GRID (BALANCED 6 / 6 SPLIT FOR MAX TABLE SPACE) */}
             <div className="px-6 sm:px-8 pb-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-              
+
               {/* LEFT COLUMN: MAP CONTAINER (6 COLS) */}
               <div className="lg:col-span-6 bg-white rounded-3xl border border-slate-200/80 shadow-2xs overflow-hidden flex flex-col justify-between">
                 <div className="p-4 sm:p-5 border-b border-slate-100 flex items-center justify-between">
@@ -565,7 +562,7 @@ export default function GovtElectionCaseStudy() {
 
                 {/* MAP CANVAS CONTAINER */}
                 <div className="relative bg-[#F1F5F9] p-4 min-h-[460px] flex items-center justify-center overflow-hidden">
-                  
+
                   {/* FLOATING DENSITY LEGEND */}
                   <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-xs p-3.5 rounded-2xl border border-slate-200/80 shadow-md text-xs space-y-1.5 z-20">
                     <div className="font-bold text-[10px] uppercase text-slate-400 tracking-wider">
@@ -599,11 +596,11 @@ export default function GovtElectionCaseStudy() {
                   </div>
 
                   {/* REAL INTERACTIVE VECTOR MAP OF INDIA */}
-                  <div 
+                  <div
                     onMouseLeave={() => setHoveredState(null)}
                     className="relative w-full h-full min-h-[440px] flex items-center justify-center overflow-hidden"
                   >
-                    <div 
+                    <div
                       className="relative w-full max-w-md aspect-[4/4.2] transition-transform duration-500 ease-out"
                       style={{ transform: `scale(${zoomFactor})` }}
                     >
@@ -752,11 +749,11 @@ export default function GovtElectionCaseStudy() {
 
                   {/* ZOOM CONTROLS */}
                   <div className="absolute bottom-4 right-4 flex flex-col bg-white border border-slate-200 rounded-xl shadow-md overflow-hidden z-20 text-slate-700 font-bold text-xs">
-                    <button 
+                    <button
                       onClick={() => setZoomFactor(prev => Math.min(prev + 0.2, 1.8))}
                       className="w-7 h-7 flex items-center justify-center hover:bg-slate-100 border-b border-slate-200 cursor-pointer"
                     >+</button>
-                    <button 
+                    <button
                       onClick={() => setZoomFactor(prev => Math.max(prev - 0.2, 0.8))}
                       className="w-7 h-7 flex items-center justify-center hover:bg-slate-100 cursor-pointer"
                     >-</button>
@@ -776,7 +773,7 @@ export default function GovtElectionCaseStudy() {
 
               {/* RIGHT COLUMN: STATE OVERVIEW & FULL-WIDTH EXPANDED DATA TABLE (6 COLS) */}
               <div className="lg:col-span-6 space-y-6">
-                
+
                 {/* OVERVIEW CARDS */}
                 <div className="bg-white rounded-3xl border border-slate-200/80 p-5 shadow-2xs space-y-3.5">
                   <div>
@@ -819,7 +816,7 @@ export default function GovtElectionCaseStudy() {
 
                 {/* EXPANDED SPACING TABLE CONTAINER */}
                 <div className="bg-white rounded-3xl border border-slate-200/80 p-6 shadow-2xs space-y-4">
-                  
+
                   {/* FILTER HEADER */}
                   <div className="flex flex-col sm:flex-row items-center gap-3">
                     <div className="bg-white border border-slate-200 rounded-xl px-4 py-2 text-xs font-semibold text-slate-700 flex items-center justify-between w-full sm:w-auto sm:min-w-[140px] cursor-pointer hover:border-slate-300 shadow-2xs">
@@ -947,7 +944,7 @@ export default function GovtElectionCaseStudy() {
       ) : (
         /* MAIN EDITORIAL UX CASE STUDY (NARRATIVE FLOW 01 TO 20) */
         <main className="max-w-5xl mx-auto px-6 sm:px-8 py-16 space-y-24 sm:space-y-32">
-          
+
           {/* 01 — EDITORIAL HERO SECTION */}
           <section className="space-y-6 max-w-4xl pt-4">
             <div className="space-y-4">
@@ -1118,7 +1115,7 @@ export default function GovtElectionCaseStudy() {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-              
+
               {/* Persona Card Component */}
               <div className="lg:col-span-5 bg-white p-8 rounded-3xl border border-slate-200/60 shadow-2xs space-y-6">
                 <div className="flex items-center gap-4">
@@ -1323,7 +1320,7 @@ export default function GovtElectionCaseStudy() {
               <div className="text-xs font-mono font-semibold text-blue-400 uppercase tracking-widest text-center">
                 GEOGRAPHIC HIERARCHY FLOW
               </div>
-              
+
               <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 text-center">
                 <div className="bg-slate-800 p-6 rounded-2xl border border-slate-700 space-y-1">
                   <div className="text-xs font-mono text-blue-400 font-semibold">LEVEL 01</div>
