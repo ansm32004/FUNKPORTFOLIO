@@ -6,7 +6,8 @@ import { Mail, Send, CheckCircle2, MessageSquare, MapPin } from "lucide-react";
 export default function Footer() {
   const [time, setTime] = useState("");
   const [submitted, setSubmitted] = useState(false);
-  const [noteText, setNoteText] = useState("");
+  const [formData, setFormData] = useState({ name: "", email: "", message: "" });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     const updateTime = () => {
@@ -26,10 +27,38 @@ export default function Footer() {
     return () => clearInterval(interval);
   }, []);
 
-  const handleSubmitNote = (e) => {
+  const handleSubmitNote = async (e) => {
     e.preventDefault();
-    if (!noteText.trim()) return;
-    setSubmitted(true);
+    if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) return;
+    
+    setIsSubmitting(true);
+    
+    try {
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          access_key: "455b79f8-63f2-4f34-b6ab-e004c208e68c",
+          name: formData.name,
+          email: formData.email,
+          message: formData.message,
+        }),
+      });
+      
+      const result = await response.json();
+      if (result.success) {
+        setSubmitted(true);
+      } else {
+        alert("Something went wrong!");
+      }
+    } catch (error) {
+      alert("Error sending message!");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -57,10 +86,10 @@ export default function Footer() {
 
               <div className="pt-2 flex flex-wrap items-center gap-4">
                 <a
-                  href="mailto:contact@anshumanmishra.com"
+                  href="mailto:rkm32004@gmail.com"
                   className="px-7 py-3.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm rounded-full shadow-lg transition-all inline-block"
                 >
-                  contact@anshumanmishra.com
+                  rkm32004@gmail.com
                 </a>
 
                 <div className="flex items-center gap-2 px-4 py-3 rounded-full bg-slate-100 border border-slate-200 text-xs font-semibold text-slate-700">
@@ -75,29 +104,47 @@ export default function Footer() {
               <div className="relative bg-[#EAF235] rounded-3xl p-7 shadow-cast-yellow border border-yellow-300 transform rotate-2">
                 <div className="flex items-center gap-2 mb-3 text-amber-950">
                   <MessageSquare className="w-4 h-4 text-amber-900" />
-                  <span className="text-xs font-bold uppercase tracking-wider">Pin a Quick Message / Meme</span>
+                  <span className="text-xs font-bold uppercase tracking-wider">Send a Message</span>
                 </div>
 
                 {submitted ? (
                   <div className="py-6 text-center space-y-2">
                     <CheckCircle2 className="w-8 h-8 text-emerald-700 mx-auto" />
-                    <p className="text-xs font-bold text-slate-900">Note Pinned!</p>
+                    <p className="text-xs font-bold text-slate-900">Message Sent!</p>
                     <p className="text-[11px] text-slate-700">Thanks for reaching out. I'll get back to you shortly.</p>
                   </div>
                 ) : (
                   <form onSubmit={handleSubmitNote} className="space-y-3">
+                    <input
+                      type="text"
+                      required
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      placeholder="Your name"
+                      className="w-full bg-yellow-100/80 border border-yellow-300 rounded-xl p-3 text-xs font-medium text-amber-950 placeholder-amber-800/50 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                    />
+                    <input
+                      type="email"
+                      required
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      placeholder="Your email address"
+                      className="w-full bg-yellow-100/80 border border-yellow-300 rounded-xl p-3 text-xs font-medium text-amber-950 placeholder-amber-800/50 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                    />
                     <textarea
-                      value={noteText}
-                      onChange={(e) => setNoteText(e.target.value)}
+                      required
+                      value={formData.message}
+                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                       placeholder="Type your message, offer, or meme link here..."
                       rows={3}
                       className="w-full bg-yellow-100/80 border border-yellow-300 rounded-xl p-3 text-xs font-medium text-amber-950 placeholder-amber-800/50 focus:outline-none focus:ring-2 focus:ring-amber-500 resize-none"
                     />
                     <button
                       type="submit"
-                      className="w-full py-2.5 bg-amber-950 hover:bg-black text-amber-50 font-bold text-xs rounded-xl transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+                      disabled={isSubmitting}
+                      className="w-full py-2.5 bg-amber-950 hover:bg-black disabled:opacity-70 disabled:cursor-not-allowed text-amber-50 font-bold text-xs rounded-xl transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
                     >
-                      <span>Pin Note</span>
+                      <span>{isSubmitting ? "Sending..." : "Send Message"}</span>
                       <Send className="w-3.5 h-3.5" />
                     </button>
                   </form>
