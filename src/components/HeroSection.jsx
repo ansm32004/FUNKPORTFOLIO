@@ -58,7 +58,7 @@ export default function HeroSection() {
 
   return (
     <section id="hero" ref={containerRef} className="relative w-full overflow-hidden select-none m-0 p-0 perspective-[1200px]">
-      
+
       {/* 1. TOP SECTION: Full-Bleed Elevated White Paper Sheet (3D Scroll Perspective Lift) */}
       <motion.div
         style={{
@@ -156,7 +156,7 @@ export default function HeroSection() {
 
       {/* 2. BOTTOM SECTION: Full-Bleed Dark Green Cutting Mat Layer */}
       <div className="relative w-full bg-cutting-mat pt-16 pb-32 px-6 sm:px-12 md:px-20 z-10">
-        
+
         {/* Slack Chat Popover Card */}
         <motion.div
           initial={{ opacity: 0, y: 50, scale: 0.85 }}
@@ -169,7 +169,7 @@ export default function HeroSection() {
           <div className="w-10 h-10 rounded-xl bg-slate-900 text-white font-bold text-xs flex items-center justify-center shrink-0 shadow-xs border border-slate-800">
             AM
           </div>
-          
+
           <div className="flex-1 text-left">
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold text-slate-900">Anshuman</span>
@@ -202,7 +202,7 @@ export default function HeroSection() {
         </motion.div>
 
         {/* PINNED STICKY NOTES WITH 3D POP & ROTATE BLAST ENTRANCE */}
-        
+
         {/* 1. PINK STICKY NOTE (Bottom-Left Blast) */}
         <motion.div
           initial={{ opacity: 0, x: -80, y: 40, rotate: -20, scale: 0.8 }}

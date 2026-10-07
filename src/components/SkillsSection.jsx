@@ -2,25 +2,40 @@
 
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Sliders, Volume2, Layers, Code, Video, Cpu } from "lucide-react";
+import { Sliders, Volume2, Layers, Code, Video, Cpu, Palette, Gamepad2, Sparkles, Camera } from "lucide-react";
 
 const SOUNDBOARD_PADS = [
   { name: "Figma", note: "Sa 🎵", swara: "Shadj (C4)", category: "Design", freq: 261.63 },
-  { name: "React", note: "Re 🎵", swara: "Rishabh (D4)", category: "Frontend", freq: 293.66 },
-  { name: "Next.js", note: "Ga 🎵", swara: "Gandhar (E4)", category: "Fullstack", freq: 329.63 },
-  { name: "Tailwind", note: "Ma 🎵", swara: "Madhyam (F4)", category: "Styling", freq: 349.23 },
-  { name: "After Effects", note: "Pa 🎵", swara: "Pancham (G4)", category: "Motion", freq: 392.00 },
-  { name: "Rive", note: "Dha 🎵", swara: "Dhaivat (A4)", category: "Interactive", freq: 440.00 },
-  { name: "Python", note: "Ni 🎵", swara: "Nishad (B4)", category: "AI/ML", freq: 493.88 },
-  { name: "TypeScript", note: "Sa' 🎵", swara: "Taar Shadj (C5)", category: "Language", freq: 523.25 },
+  { name: "Branding", note: "Re 🎵", swara: "Rishabh (D4)", category: "Brand", freq: 293.66 },
+  { name: "Unity", note: "Ga 🎵", swara: "Gandhar (E4)", category: "Game Dev", freq: 329.63 },
+  { name: "Motion", note: "Ma 🎵", swara: "Madhyam (F4)", category: "Animation", freq: 349.23 },
+  { name: "React", note: "Pa 🎵", swara: "Pancham (G4)", category: "Frontend", freq: 392.00 },
+  { name: "Python", note: "Dha 🎵", swara: "Dhaivat (A4)", category: "AI/ML", freq: 440.00 },
+  { name: "GitHub", note: "Ni 🎵", swara: "Nishad (B4)", category: "Tech", freq: 493.88 },
+  { name: "Cinematography", note: "Sa' 🎵", swara: "Taar Shadj (C5)", category: "Content", freq: 523.25 },
 ];
 
 // Web Audio API Synthesizer Octave Engine (Sa Re Ga Ma Pa Dha Ni Sa')
+let sharedAudioCtx = null;
+
+function getAudioContext() {
+  if (typeof window === "undefined") return null;
+  if (!sharedAudioCtx) {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (AudioCtx) {
+      sharedAudioCtx = new AudioCtx();
+    }
+  }
+  if (sharedAudioCtx && sharedAudioCtx.state === "suspended") {
+    sharedAudioCtx.resume();
+  }
+  return sharedAudioCtx;
+}
+
 function playOctaveSynthSound(padItem) {
   try {
-    const AudioCtx = window.AudioContext || window.webkitAudioContext;
-    if (!AudioCtx) return;
-    const ctx = new AudioCtx();
+    const ctx = getAudioContext();
+    if (!ctx) return;
     
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
@@ -47,9 +62,8 @@ function playOctaveSynthSound(padItem) {
 
 function playSliderFaderTone(val) {
   try {
-    const AudioCtx = window.AudioContext || window.webkitAudioContext;
-    if (!AudioCtx) return;
-    const ctx = new AudioCtx();
+    const ctx = getAudioContext();
+    if (!ctx) return;
     
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
@@ -72,57 +86,57 @@ function playSliderFaderTone(val) {
 
 const INITIAL_CHANNELS = [
   {
-    id: "product-design",
+    id: "product-brand-design",
     channelNum: "CH 01",
-    title: "Product Design & Design Systems",
+    title: "Product & Brand Design",
     icon: Layers,
     iconColor: "text-amber-500",
     initialLevel: 98,
-    apps: ["Figma", "Adobe XD", "Framer", "ProtoPie"],
-    joke: "I move buttons until they 'feel right.' Operator factors in 8px spacing.",
+    apps: ["Figma", "UI/UX", "Design Systems", "Branding"],
+    joke: "I move buttons until they feel right. Making ideas look as good as they work.",
     badgeBg: "bg-amber-100 text-amber-900 border-amber-300",
   },
   {
-    id: "frontend-dev",
+    id: "ar-vr-motion",
     channelNum: "CH 02",
-    title: "Frontend & React Architecture",
-    icon: Code,
-    iconColor: "text-blue-500",
-    initialLevel: 95,
-    apps: ["React", "Next.js", "Tailwind CSS", "TypeScript"],
-    joke: "I know enough React to blame CSS. Enough CSS to blame JavaScript.",
-    badgeBg: "bg-blue-100 text-blue-900 border-blue-300",
-  },
-  {
-    id: "motion-graphics",
-    channelNum: "CH 03",
-    title: "Motion Graphics & Physics",
-    icon: Video,
+    title: "AR/VR, Motion & 3D",
+    icon: Gamepad2,
     iconColor: "text-purple-500",
-    initialLevel: 92,
-    apps: ["After Effects", "Premiere Pro", "Rive", "Blender"],
-    joke: "If it doesn't move... I'll probably animate it.",
+    initialLevel: 94,
+    apps: ["Unity", "AR/VR", "Motion Design", "Blender"],
+    joke: "I like building worlds people can step into. If it doesn't move, I'll probably animate it.",
     badgeBg: "bg-purple-100 text-purple-900 border-purple-300",
   },
   {
-    id: "ai-creative-tech",
+    id: "frontend-ai",
+    channelNum: "CH 03",
+    title: "Frontend & AI",
+    icon: Code,
+    iconColor: "text-blue-500",
+    initialLevel: 88,
+    apps: ["React", "Next.js", "Python", "Machine Learning"],
+    joke: "Design it. Build it. Teaching machines to make sense of messy ideas.",
+    badgeBg: "bg-blue-100 text-blue-900 border-blue-300",
+  },
+  {
+    id: "creative-leadership",
     channelNum: "CH 04",
-    title: "AI & Creative Technology",
-    icon: Cpu,
-    iconColor: "text-emerald-500",
-    initialLevel: 90,
-    apps: ["Python", "PyTorch", "Cursor", "OpenAI"],
-    joke: "Teaching computers to think. Still working on teaching printers.",
-    badgeBg: "bg-emerald-100 text-emerald-900 border-emerald-300",
+    title: "Creative Tech & Leadership",
+    icon: Sparkles,
+    iconColor: "text-cyan-500",
+    initialLevel: 80,
+    apps: ["Interactive Tech", "GitHub", "Content Creation", "Community"],
+    joke: "Where design meets technology. Building things is better with people.",
+    badgeBg: "bg-cyan-100 text-cyan-900 border-cyan-300",
   },
 ];
 
 export default function SkillsSection() {
   const [channelLevels, setChannelLevels] = useState({
-    "product-design": 98,
-    "frontend-dev": 95,
-    "motion-graphics": 92,
-    "ai-creative-tech": 90,
+    "product-brand-design": 98,
+    "ar-vr-motion": 94,
+    "frontend-ai": 88,
+    "creative-leadership": 80,
   });
 
   const [activePad, setActivePad] = useState(null);
