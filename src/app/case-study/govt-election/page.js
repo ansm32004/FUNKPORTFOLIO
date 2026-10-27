@@ -4,6 +4,9 @@ import { getVisibility } from "@/lib/visibility";
 import CaseStudyGate from "@/components/CaseStudyGate";
 import GovtElectionCaseStudy from "@/components/GovtElectionCaseStudy";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export const metadata = {
   title: "Govt Election Event Reporting Case Study | Product UX & GIS Dashboard",
   description:

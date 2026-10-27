@@ -4,6 +4,9 @@ import { getVisibility } from "@/lib/visibility";
 import CaseStudyGate from "@/components/CaseStudyGate";
 import VammyCaseStudy from "@/components/VammyCaseStudy";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export const metadata = {
   title: "Vammy — The Finance Buddy UX Case Study",
   description: "A comprehensive UX case study and financial tracking mobile application design.",

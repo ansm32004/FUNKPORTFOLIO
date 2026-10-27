@@ -32,7 +32,9 @@ export default function CaseStudyGate({
             ? "Case study published to public!"
             : "Case study hidden from public."
         );
-        setTimeout(() => setFeedback(""), 4000);
+        setTimeout(() => {
+          window.location.reload();
+        }, 800);
       } else {
         alert(data.error || "Failed to update visibility");
       }
@@ -117,24 +119,16 @@ export default function CaseStudyGate({
     );
   }
 
-  // Case 2: User is admin, or project is visible -> Render children with sticky admin bar if applicable
+  // Case 2: Render children. If admin is viewing a HIDDEN case study, show an amber reminder bar with a Publish button.
   return (
     <div className="relative">
-      {isAdmin && (
-        <div className={`sticky top-0 z-50 px-4 py-2.5 backdrop-blur-md border-b text-xs font-mono transition-colors ${
-          isVisible
-            ? "bg-slate-900/90 border-slate-700 text-slate-200"
-            : "bg-amber-950/95 border-amber-600/60 text-amber-200"
-        }`}>
+      {isAdmin && !isVisible && (
+        <div className="sticky top-0 z-50 px-4 py-2.5 backdrop-blur-md border-b text-xs font-mono bg-amber-950/95 border-amber-600/60 text-amber-200">
           <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-2">
-              <span className={`w-2 h-2 rounded-full ${isVisible ? "bg-emerald-400 animate-pulse" : "bg-amber-400 animate-ping"}`} />
-              <span className="font-bold">
-                Admin Mode:
-              </span>
-              <span>
-                {isVisible ? "This case study is PUBLIC." : "This case study is HIDDEN from the public."}
-              </span>
+              <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping" />
+              <span className="font-bold">Admin Mode:</span>
+              <span>This case study is HIDDEN from the public.</span>
               {feedback && (
                 <span className="inline-flex items-center gap-1 font-bold text-white bg-emerald-600 px-2 py-0.5 rounded text-[10px]">
                   <CheckCircle2 className="w-3 h-3" /> {feedback}
@@ -144,21 +138,12 @@ export default function CaseStudyGate({
 
             <div className="flex items-center gap-2">
               <button
-                onClick={() => handleToggle(!isVisible)}
+                onClick={() => handleToggle(true)}
                 disabled={isUpdating}
-                className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer ${
-                  isVisible
-                    ? "bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 border border-amber-500/40"
-                    : "bg-emerald-500 text-slate-950 hover:bg-emerald-400 font-extrabold shadow-sm"
-                }`}
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-500 text-slate-950 hover:bg-emerald-400 font-extrabold shadow-sm transition-all cursor-pointer disabled:opacity-50"
               >
                 {isUpdating ? (
                   <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                ) : isVisible ? (
-                  <>
-                    <EyeOff className="w-3.5 h-3.5" />
-                    <span>Hide From Public</span>
-                  </>
                 ) : (
                   <>
                     <Eye className="w-3.5 h-3.5" />

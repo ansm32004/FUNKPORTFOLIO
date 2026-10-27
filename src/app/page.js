@@ -12,6 +12,9 @@ import ReviewSection from "@/components/ReviewSection";
 import Footer from "@/components/Footer";
 import SideNav from "@/components/SideNav";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default async function Home() {
   const cookieStore = await cookies();
   const isAdmin = Boolean(validateSessionToken(cookieStore.get(SESSION_COOKIE_NAME)?.value));

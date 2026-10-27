@@ -77,7 +77,7 @@ export default function Footer() {
               </div>
 
               <h2 className="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight">
-                Let's build something cool. <br className="hidden sm:inline" />
+                Let&apos;s build something cool. <br className="hidden sm:inline" />
                 <span className="text-emerald-700">Or argue whether 16px is better than 20px.</span>
               </h2>
 
@@ -112,7 +112,7 @@ export default function Footer() {
                   <div className="py-6 text-center space-y-2">
                     <CheckCircle2 className="w-8 h-8 text-emerald-700 mx-auto" />
                     <p className="text-xs font-bold text-slate-900">Message Sent!</p>
-                    <p className="text-[11px] text-slate-700">Thanks for reaching out. I'll get back to you shortly.</p>
+                    <p className="text-[11px] text-slate-700">Thanks for reaching out. I&apos;ll get back to you shortly.</p>
                   </div>
                 ) : (
                   <form onSubmit={handleSubmitNote} className="space-y-3">
@@ -164,7 +164,7 @@ export default function Footer() {
                 <span>Designed. Developed. Overthought. Repeated.</span>
               </div>
               <p className="text-[11px] text-slate-400 font-normal">
-                © 2026 Anshuman Mishra. No designers were harmed while making this portfolio. (Developers... we're still investigating.)
+                © 2026 Anshuman Mishra. No designers were harmed while making this portfolio. (Developers... we&apos;re still investigating.)
               </p>
             </div>
 

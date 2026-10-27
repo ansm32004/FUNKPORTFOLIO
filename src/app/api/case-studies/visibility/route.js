@@ -1,10 +1,21 @@
 import { cookies } from "next/headers";
+import { revalidatePath } from "next/cache";
 import { SESSION_COOKIE_NAME, validateSessionToken } from "@/lib/auth";
 import {
   getVisibility,
   saveVisibility,
   setCaseStudyVisibility,
 } from "@/lib/visibility";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
+const NO_CACHE_HEADERS = {
+  "Content-Type": "application/json",
+  "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0",
+  "Pragma": "no-cache",
+  "Expires": "0",
+};
 
 export async function GET() {
   try {
@@ -14,15 +25,18 @@ export async function GET() {
 
     const visibility = await getVisibility();
 
-    return Response.json({
-      success: true,
-      visibility,
-      isAdmin,
-    });
+    return new Response(
+      JSON.stringify({
+        success: true,
+        visibility,
+        isAdmin,
+      }),
+      { status: 200, headers: NO_CACHE_HEADERS }
+    );
   } catch (err) {
-    return Response.json(
-      { success: false, error: err.message || "Failed to load visibility" },
-      { status: 500 }
+    return new Response(
+      JSON.stringify({ success: false, error: err.message || "Failed to load visibility" }),
+      { status: 500, headers: NO_CACHE_HEADERS }
     );
   }
 }
@@ -35,9 +49,9 @@ export async function POST(request) {
     const isAdmin = Boolean(validateSessionToken(sessionCookie?.value));
 
     if (!isAdmin) {
-      return Response.json(
-        { success: false, error: "Unauthorized. Admin credentials required." },
-        { status: 401 }
+      return new Response(
+        JSON.stringify({ success: false, error: "Unauthorized. Admin credentials required." }),
+        { status: 401, headers: NO_CACHE_HEADERS }
       );
     }
 
@@ -54,22 +68,35 @@ export async function POST(request) {
       updatedVisibility = { ...current, ...newVisibilityMap };
       await saveVisibility(updatedVisibility);
     } else {
-      return Response.json(
-        { success: false, error: "Invalid payload. Provide slug and visible boolean." },
-        { status: 400 }
+      return new Response(
+        JSON.stringify({ success: false, error: "Invalid payload. Provide slug and visible boolean." }),
+        { status: 400, headers: NO_CACHE_HEADERS }
       );
     }
 
-    return Response.json({
-      success: true,
-      visibility: updatedVisibility,
-      message: "Visibility updated successfully",
-    });
+    // 3. Purge Next.js Server Component caches so all pages show updated visibility immediately
+    try {
+      revalidatePath("/", "page");
+      revalidatePath("/admin", "page");
+      revalidatePath("/case-study/employee-dash", "page");
+      revalidatePath("/case-study/govt-election", "page");
+      revalidatePath("/case-study/vammy", "page");
+    } catch {
+      // Ignore cache revalidation errors if outside request context
+    }
+
+    return new Response(
+      JSON.stringify({
+        success: true,
+        visibility: updatedVisibility,
+        message: "Visibility updated successfully",
+      }),
+      { status: 200, headers: NO_CACHE_HEADERS }
+    );
   } catch (err) {
-    return Response.json(
-      { success: false, error: err.message || "Failed to update visibility" },
-      { status: 500 }
+    return new Response(
+      JSON.stringify({ success: false, error: err.message || "Failed to update visibility" }),
+      { status: 500, headers: NO_CACHE_HEADERS }
     );
   }
 }
-

@@ -63,7 +63,10 @@ export default function AdminPage() {
 
   const refreshStatus = async () => {
     try {
-      const res = await fetch("/api/case-studies/visibility");
+      const res = await fetch(`/api/case-studies/visibility?t=${Date.now()}`, {
+        cache: "no-store",
+        headers: { "Cache-Control": "no-cache" }
+      });
       const data = await res.json();
       if (data.visibility) {
         setVisibility(data.visibility);
@@ -77,7 +80,10 @@ export default function AdminPage() {
   // Check auth and initial visibility on mount
   useEffect(() => {
     let isMounted = true;
-    fetch("/api/case-studies/visibility")
+    fetch(`/api/case-studies/visibility?t=${Date.now()}`, {
+      cache: "no-store",
+      headers: { "Cache-Control": "no-cache" }
+    })
       .then((res) => res.json())
       .then((data) => {
         if (!isMounted) return;
@@ -217,6 +223,7 @@ export default function AdminPage() {
           <div className="flex items-center gap-3">
             <Link
               href="/"
+              prefetch={false}
               className="inline-flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-emerald-400 hover:text-white transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />

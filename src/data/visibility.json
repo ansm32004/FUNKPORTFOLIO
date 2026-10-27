@@ -1,5 +1,6 @@
 {
   "employee-dash": true,
-  "govt-election": false,
+  "govt-election": true,
   "vammy": true
+}
 }

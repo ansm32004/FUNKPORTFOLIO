@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { ArrowUpRight, Folder, EyeOff, ShieldCheck } from "lucide-react";
+import { ArrowUpRight, Folder, Eye, EyeOff, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 
 const PROJECTS = [
@@ -56,27 +56,50 @@ export default function SelectedWork({
     }
   );
   const [isAdmin, setIsAdmin] = useState(initialIsAdmin);
+  const [showHiddenToAdmin, setShowHiddenToAdmin] = useState(false);
 
-  // Re-fetch on mount so state stays fresh after toggling in /admin
+  // Always fetch fresh visibility on mount and on window focus (bypassing any browser cache)
   useEffect(() => {
-    fetch("/api/case-studies/visibility")
-      .then((res) => res.json())
-      .then((data) => {
+    let isMounted = true;
+    const fetchFreshVisibility = async () => {
+      try {
+        const res = await fetch(`/api/case-studies/visibility?t=${Date.now()}`, {
+          cache: "no-store",
+          headers: { "Cache-Control": "no-cache" }
+        });
+        const data = await res.json();
+        if (!isMounted) return;
         if (data.visibility) {
           setVisibility(data.visibility);
         }
         if (typeof data.isAdmin === "boolean") {
           setIsAdmin(data.isAdmin);
         }
-      })
-      .catch((err) => console.error("Could not fetch case study visibility:", err));
+      } catch (err) {
+        console.error("Could not fetch case study visibility:", err);
+      }
+    };
+
+    fetchFreshVisibility();
+
+    const onFocus = () => fetchFreshVisibility();
+    window.addEventListener("focus", onFocus);
+    return () => {
+      isMounted = false;
+      window.removeEventListener("focus", onFocus);
+    };
   }, []);
 
-  // Filter projects: Admins see all (with indicator on hidden ones), public sees only visible
+  // Filter projects:
+  // - Public visitors: ONLY visible projects are shown.
+  // - Admin: By default, shows visible projects (clean public view). If admin toggles "Show Hidden", previews all.
   const displayedProjects = PROJECTS.filter((project) => {
-    if (isAdmin) return true;
-    return visibility[project.id] !== false;
+    const isVisible = visibility[project.id] !== false;
+    if (isVisible) return true;
+    return isAdmin && showHiddenToAdmin;
   });
+
+  const hiddenCount = PROJECTS.filter((p) => visibility[p.id] === false).length;
 
   return (
     <section id="work" className="relative z-10 py-24 px-6 sm:px-12 md:px-20 bg-cutting-mat border-t border-emerald-950/80">
@@ -84,19 +107,41 @@ export default function SelectedWork({
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 pb-6 border-b border-emerald-800/40 gap-6">
           <div>
-            <div className="flex items-center gap-3 text-xs font-bold uppercase tracking-wider text-emerald-400 mb-2">
+            <div className="flex flex-wrap items-center gap-3 text-xs font-bold uppercase tracking-wider text-emerald-400 mb-2">
               <div className="flex items-center gap-2">
                 <Folder className="w-4 h-4" />
                 <span>01 // Selected Work</span>
               </div>
+
               {isAdmin && (
-                <Link
-                  href="/admin"
-                  className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/30 transition-colors"
-                >
-                  <ShieldCheck className="w-3 h-3 text-emerald-400" />
-                  Admin Active &bull; Manage
-                </Link>
+                <div className="flex items-center gap-2">
+                  <Link
+                    href="/admin"
+                    className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/30 transition-colors"
+                  >
+                    <ShieldCheck className="w-3 h-3 text-emerald-400" />
+                    Admin Panel
+                  </Link>
+
+                  {hiddenCount > 0 && (
+                    <button
+                      onClick={() => setShowHiddenToAdmin(!showHiddenToAdmin)}
+                      className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:bg-amber-500/30 transition-colors cursor-pointer"
+                    >
+                      {showHiddenToAdmin ? (
+                        <>
+                          <EyeOff className="w-3 h-3" />
+                          <span>Hide {hiddenCount} Hidden Draft{hiddenCount > 1 ? "s" : ""}</span>
+                        </>
+                      ) : (
+                        <>
+                          <Eye className="w-3 h-3" />
+                          <span>Preview {hiddenCount} Hidden ({showHiddenToAdmin ? "ON" : "OFF"})</span>
+                        </>
+                      )}
+                    </button>
+                  )}
+                </div>
               )}
             </div>
             <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
@@ -108,7 +153,7 @@ export default function SelectedWork({
           </p>
         </div>
 
-        {/* Empty State if All Hidden for Public */}
+        {/* Empty State if All Hidden */}
         {displayedProjects.length === 0 && (
           <div className="text-center py-20 px-6 rounded-3xl bg-white/5 border border-emerald-800/40 max-w-xl mx-auto space-y-4">
             <Folder className="w-12 h-12 text-emerald-400 mx-auto opacity-60" />
@@ -152,20 +197,20 @@ export default function SelectedWork({
                     <span className="w-2 h-2 rounded-full bg-slate-700" />
                   </div>
 
-                  {/* Admin Hidden Badge */}
-                  {isAdmin && isHidden && (
+                  {/* Hidden Indicator ONLY when admin explicitly turns on Preview Hidden */}
+                  {isAdmin && isHidden && showHiddenToAdmin && (
                     <div className="mb-4 px-3 py-1.5 rounded-xl bg-amber-50 border border-amber-300 flex items-center justify-between text-xs text-amber-800 font-mono">
                       <span className="flex items-center gap-1.5 font-bold">
                         <EyeOff className="w-3.5 h-3.5 text-amber-600 shrink-0" />
                         Hidden from Public
                       </span>
                       <span className="text-[10px] uppercase font-bold text-amber-600 bg-amber-200/60 px-2 py-0.5 rounded">
-                        Admin Only
+                        Admin Preview
                       </span>
                     </div>
                   )}
 
-                  {/* Top Metadata Header Bar — Non-breaking & Non-colliding */}
+                  {/* Top Metadata Header Bar */}
                   <div className="flex items-center justify-between gap-3 mb-5 pt-1 min-w-0">
                     <span className={`text-[11px] font-bold px-3 py-1 rounded-full shadow-xs whitespace-nowrap shrink-0 ${project.stickyColor}`}>
                       {project.tag}

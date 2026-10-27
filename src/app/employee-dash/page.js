@@ -4,6 +4,9 @@ import { getVisibility } from "@/lib/visibility";
 import CaseStudyGate from "@/components/CaseStudyGate";
 import EmployeeDashCaseStudy from "@/components/EmployeeDashCaseStudy";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export const metadata = {
   title: "Employee Dash — Designing a Connected Employee Growth Experience",
   description:
