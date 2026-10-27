@@ -15,12 +15,17 @@ export const DEFAULT_VISIBILITY = {
 export async function getVisibility() {
   try {
     const raw = await fs.readFile(DATA_FILE_PATH, "utf8");
-    const parsed = JSON.parse(raw);
-    return { ...DEFAULT_VISIBILITY, ...parsed };
+    const parsed = JSON.parse(raw.trim());
+    return {
+      "employee-dash": parsed["employee-dash"] !== false,
+      "govt-election": parsed["govt-election"] !== false,
+      "vammy": parsed["vammy"] !== false,
+    };
   } catch {
-    // If file doesn't exist yet, write default and return
-    await saveVisibility(DEFAULT_VISIBILITY);
-    return DEFAULT_VISIBILITY;
+    // If file doesn't exist or is corrupted, reset to defaults
+    const fallback = { ...DEFAULT_VISIBILITY };
+    await saveVisibility(fallback);
+    return fallback;
   }
 }
 
@@ -31,9 +36,14 @@ export async function saveVisibility(visibilityData) {
   try {
     const dir = path.dirname(DATA_FILE_PATH);
     await fs.mkdir(dir, { recursive: true });
+    const cleanData = {
+      "employee-dash": visibilityData["employee-dash"] !== false,
+      "govt-election": visibilityData["govt-election"] !== false,
+      "vammy": visibilityData["vammy"] !== false,
+    };
     await fs.writeFile(
       DATA_FILE_PATH,
-      JSON.stringify(visibilityData, null, 2),
+      JSON.stringify(cleanData, null, 2) + "\n",
       "utf8"
     );
     return true;
@@ -48,8 +58,10 @@ export async function saveVisibility(visibilityData) {
  */
 export async function setCaseStudyVisibility(slug, isVisible) {
   const current = await getVisibility();
-  current[slug] = Boolean(isVisible);
-  await saveVisibility(current);
-  return current;
+  const updated = {
+    ...current,
+    [slug]: Boolean(isVisible),
+  };
+  await saveVisibility(updated);
+  return updated;
 }
-

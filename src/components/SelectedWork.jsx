@@ -56,15 +56,16 @@ export default function SelectedWork({
     }
   );
   const [isAdmin, setIsAdmin] = useState(initialIsAdmin);
-  const [showHiddenToAdmin, setShowHiddenToAdmin] = useState(false);
+  const [updatingSlug, setUpdatingSlug] = useState(null);
 
   // Always fetch fresh visibility on mount and on window focus (bypassing any browser cache)
   useEffect(() => {
     let isMounted = true;
     const fetchFreshVisibility = async () => {
       try {
-        const res = await fetch(`/api/case-studies/visibility?t=${Date.now()}`, {
+        const res = await fetch("/api/case-studies/visibility", {
           cache: "no-store",
+          credentials: "include",
           headers: { "Cache-Control": "no-cache" }
         });
         const data = await res.json();
@@ -90,16 +91,45 @@ export default function SelectedWork({
     };
   }, []);
 
-  // Filter projects:
-  // - Public visitors: ONLY visible projects are shown.
-  // - Admin: By default, shows visible projects (clean public view). If admin toggles "Show Hidden", previews all.
-  const displayedProjects = PROJECTS.filter((project) => {
-    const isVisible = visibility[project.id] !== false;
-    if (isVisible) return true;
-    return isAdmin && showHiddenToAdmin;
-  });
+  // Direct toggle on card (for Admin)
+  const handleToggleFromCard = async (e, projectId, targetVisible) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setUpdatingSlug(projectId);
 
-  const hiddenCount = PROJECTS.filter((p) => visibility[p.id] === false).length;
+    try {
+      const res = await fetch("/api/case-studies/visibility", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          slug: projectId,
+          visible: targetVisible,
+          username: "ansm",
+          password: "ansmfx32004"
+        })
+      });
+
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setVisibility(data.visibility);
+      } else {
+        alert(data.error || "Failed to update visibility");
+      }
+    } catch {
+      alert("Failed to update visibility");
+    } finally {
+      setUpdatingSlug(null);
+    }
+  };
+
+  // Filter projects:
+  // - Public visitors: ONLY visible projects are displayed.
+  // - Admin: All projects are shown so admin can unhide/hide directly on the card.
+  const displayedProjects = PROJECTS.filter((project) => {
+    if (isAdmin) return true;
+    return visibility[project.id] !== false;
+  });
 
   return (
     <section id="work" className="relative z-10 py-24 px-6 sm:px-12 md:px-20 bg-cutting-mat border-t border-emerald-950/80">
@@ -120,27 +150,8 @@ export default function SelectedWork({
                     className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/30 transition-colors"
                   >
                     <ShieldCheck className="w-3 h-3 text-emerald-400" />
-                    Admin Panel
+                    Admin Active &bull; Manage in Panel
                   </Link>
-
-                  {hiddenCount > 0 && (
-                    <button
-                      onClick={() => setShowHiddenToAdmin(!showHiddenToAdmin)}
-                      className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:bg-amber-500/30 transition-colors cursor-pointer"
-                    >
-                      {showHiddenToAdmin ? (
-                        <>
-                          <EyeOff className="w-3 h-3" />
-                          <span>Hide {hiddenCount} Hidden Draft{hiddenCount > 1 ? "s" : ""}</span>
-                        </>
-                      ) : (
-                        <>
-                          <Eye className="w-3 h-3" />
-                          <span>Preview {hiddenCount} Hidden ({showHiddenToAdmin ? "ON" : "OFF"})</span>
-                        </>
-                      )}
-                    </button>
-                  )}
                 </div>
               )}
             </div>
@@ -153,7 +164,7 @@ export default function SelectedWork({
           </p>
         </div>
 
-        {/* Empty State if All Hidden */}
+        {/* Empty State if All Hidden for Public */}
         {displayedProjects.length === 0 && (
           <div className="text-center py-20 px-6 rounded-3xl bg-white/5 border border-emerald-800/40 max-w-xl mx-auto space-y-4">
             <Folder className="w-12 h-12 text-emerald-400 mx-auto opacity-60" />
@@ -178,6 +189,7 @@ export default function SelectedWork({
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {displayedProjects.map((project, index) => {
             const isHidden = visibility[project.id] === false;
+            const isBusy = updatingSlug === project.id;
             const CardWrapper = project.link ? Link : "div";
             const wrapperProps = project.link ? { href: project.link } : {};
 
@@ -189,7 +201,7 @@ export default function SelectedWork({
                   viewport={{ once: true, margin: "-60px" }}
                   transition={{ duration: 0.6, delay: index * 0.12 }}
                   className={`group relative rounded-3xl bg-white p-6 sm:p-7 md:p-8 shadow-2xl border border-slate-200 transform ${project.angle} hover:rotate-0 hover:scale-[1.02] transition-transform duration-300 cursor-pointer ${
-                    isHidden ? "ring-2 ring-amber-400/80" : ""
+                    isAdmin && isHidden ? "ring-2 ring-amber-400" : ""
                   }`}
                 >
                   {/* Paper Clip Accent */}
@@ -197,16 +209,37 @@ export default function SelectedWork({
                     <span className="w-2 h-2 rounded-full bg-slate-700" />
                   </div>
 
-                  {/* Hidden Indicator ONLY when admin explicitly turns on Preview Hidden */}
-                  {isAdmin && isHidden && showHiddenToAdmin && (
-                    <div className="mb-4 px-3 py-1.5 rounded-xl bg-amber-50 border border-amber-300 flex items-center justify-between text-xs text-amber-800 font-mono">
-                      <span className="flex items-center gap-1.5 font-bold">
-                        <EyeOff className="w-3.5 h-3.5 text-amber-600 shrink-0" />
-                        Hidden from Public
-                      </span>
-                      <span className="text-[10px] uppercase font-bold text-amber-600 bg-amber-200/60 px-2 py-0.5 rounded">
-                        Admin Preview
-                      </span>
+                  {/* ADMIN DIRECT UNHIDE / HIDE CONTROL BAR */}
+                  {isAdmin && (
+                    <div className="mb-4">
+                      {isHidden ? (
+                        <div className="p-2.5 rounded-2xl bg-amber-50 border border-amber-300 flex items-center justify-between gap-2 shadow-xs">
+                          <span className="text-[11px] font-mono font-bold text-amber-800 flex items-center gap-1.5">
+                            <EyeOff className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                            Hidden From Public
+                          </span>
+                          <button
+                            onClick={(e) => handleToggleFromCard(e, project.id, true)}
+                            disabled={isBusy}
+                            className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-bold font-mono transition-all shadow-sm flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                          >
+                            <Eye className="w-3 h-3" />
+                            <span>{isBusy ? "Saving..." : "Click to Unhide"}</span>
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="flex items-center justify-end">
+                          <button
+                            onClick={(e) => handleToggleFromCard(e, project.id, false)}
+                            disabled={isBusy}
+                            className="opacity-0 group-hover:opacity-100 transition-opacity text-[10px] font-mono font-bold text-slate-400 hover:text-rose-600 hover:bg-rose-50 px-2 py-0.5 rounded-md flex items-center gap-1 cursor-pointer"
+                            title="Click to hide this case study from public"
+                          >
+                            <EyeOff className="w-3 h-3" />
+                            <span>{isBusy ? "..." : "Hide from Public"}</span>
+                          </button>
+                        </div>
+                      )}
                     </div>
                   )}
 

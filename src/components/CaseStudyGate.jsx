@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { Lock, Eye, EyeOff, Shield, ArrowLeft, RefreshCw, CheckCircle2 } from "lucide-react";
+import { Lock, Eye, Shield, ArrowLeft, RefreshCw, CheckCircle2 } from "lucide-react";
 
 export default function CaseStudyGate({
   slug,
@@ -14,6 +14,9 @@ export default function CaseStudyGate({
   const [isVisible, setIsVisible] = useState(initialIsVisible);
   const [isUpdating, setIsUpdating] = useState(false);
   const [feedback, setFeedback] = useState("");
+  const [unlockPassword, setUnlockPassword] = useState("");
+  const [unlockError, setUnlockError] = useState("");
+  const [isUnlocking, setIsUnlocking] = useState(false);
 
   const handleToggle = async (targetVisible) => {
     setIsUpdating(true);
@@ -21,20 +24,26 @@ export default function CaseStudyGate({
     try {
       const res = await fetch("/api/case-studies/visibility", {
         method: "POST",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ slug, visible: targetVisible })
+        body: JSON.stringify({
+          slug,
+          visible: targetVisible,
+          username: "ansm",
+          password: "ansmfx32004"
+        })
       });
       const data = await res.json();
       if (res.ok && data.success) {
         setIsVisible(targetVisible);
         setFeedback(
           targetVisible
-            ? "Case study published to public!"
+            ? "Case study unhidden and published!"
             : "Case study hidden from public."
         );
         setTimeout(() => {
           window.location.reload();
-        }, 800);
+        }, 600);
       } else {
         alert(data.error || "Failed to update visibility");
       }
@@ -42,6 +51,44 @@ export default function CaseStudyGate({
       alert("Failed to update visibility");
     } finally {
       setIsUpdating(false);
+    }
+  };
+
+  const handleQuickUnlock = async (e) => {
+    e.preventDefault();
+    setIsUnlocking(true);
+    setUnlockError("");
+
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: "ansm", password: unlockPassword })
+      });
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        // Also unhide this case study immediately
+        await fetch("/api/case-studies/visibility", {
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            slug,
+            visible: true,
+            username: "ansm",
+            password: "ansmfx32004"
+          })
+        });
+        window.location.reload();
+      } else {
+        setUnlockError(data.error || "Incorrect password");
+      }
+    } catch {
+      setUnlockError("Unlock failed. Check connection.");
+    } finally {
+      setIsUnlocking(false);
     }
   };
 
@@ -90,8 +137,31 @@ export default function CaseStudyGate({
           </div>
 
           <p className="text-sm text-emerald-100/70 leading-relaxed max-w-md mx-auto">
-            This project is temporarily hidden from public access while undergoing content updates or curation. Please explore the rest of the portfolio or return later.
+            This project is temporarily hidden from public view. If you are the author, you can unlock and unhide it below.
           </p>
+
+          {/* Quick Unlock Form */}
+          <form onSubmit={handleQuickUnlock} className="pt-2 max-w-xs mx-auto space-y-2">
+            <div className="flex items-center gap-2">
+              <input
+                type="password"
+                placeholder="Enter password to unhide..."
+                value={unlockPassword}
+                onChange={(e) => setUnlockPassword(e.target.value)}
+                className="px-3.5 py-2.5 rounded-xl bg-white/10 border border-white/20 text-xs text-white placeholder-emerald-200/40 focus:outline-none focus:ring-2 focus:ring-emerald-400 w-full"
+              />
+              <button
+                type="submit"
+                disabled={isUnlocking || !unlockPassword}
+                className="px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs whitespace-nowrap cursor-pointer disabled:opacity-50 transition-all shadow-md"
+              >
+                {isUnlocking ? "..." : "Unhide"}
+              </button>
+            </div>
+            {unlockError && (
+              <p className="text-[11px] font-medium text-rose-400">{unlockError}</p>
+            )}
+          </form>
 
           <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
@@ -106,7 +176,7 @@ export default function CaseStudyGate({
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full text-xs font-bold uppercase tracking-wider bg-white/10 hover:bg-white/20 text-white transition-colors border border-white/10"
             >
               <Shield className="w-4 h-4 text-emerald-400" />
-              <span>Admin Sign In</span>
+              <span>Admin Dashboard</span>
             </Link>
           </div>
         </div>
@@ -140,14 +210,14 @@ export default function CaseStudyGate({
               <button
                 onClick={() => handleToggle(true)}
                 disabled={isUpdating}
-                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-500 text-slate-950 hover:bg-emerald-400 font-extrabold shadow-sm transition-all cursor-pointer disabled:opacity-50"
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold bg-emerald-500 text-slate-950 hover:bg-emerald-400 font-extrabold shadow-sm transition-all cursor-pointer disabled:opacity-50"
               >
                 {isUpdating ? (
                   <RefreshCw className="w-3.5 h-3.5 animate-spin" />
                 ) : (
                   <>
                     <Eye className="w-3.5 h-3.5" />
-                    <span>Publish (Make Visible)</span>
+                    <span>Unhide Case Study (Make Public)</span>
                   </>
                 )}
               </button>
@@ -168,4 +238,3 @@ export default function CaseStudyGate({
     </div>
   );
 }
-

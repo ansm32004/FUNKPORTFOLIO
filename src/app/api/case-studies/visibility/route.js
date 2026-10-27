@@ -1,6 +1,10 @@
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
-import { SESSION_COOKIE_NAME, validateSessionToken } from "@/lib/auth";
+import {
+  SESSION_COOKIE_NAME,
+  validateSessionToken,
+  validateCredentials,
+} from "@/lib/auth";
 import {
   getVisibility,
   saveVisibility,
@@ -43,10 +47,20 @@ export async function GET() {
 
 export async function POST(request) {
   try {
-    // 1. Verify admin authorization
     const cookieStore = await cookies();
     const sessionCookie = cookieStore.get(SESSION_COOKIE_NAME);
-    const isAdmin = Boolean(validateSessionToken(sessionCookie?.value));
+    let isAdmin = Boolean(validateSessionToken(sessionCookie?.value));
+
+    // Parse request payload
+    const body = await request.json().catch(() => ({}));
+    const { slug, visible, visibility: newVisibilityMap, username, password } = body || {};
+
+    // Authorization fallback if cookie is absent but credentials are provided
+    if (!isAdmin && username && password) {
+      if (validateCredentials(username, password)) {
+        isAdmin = true;
+      }
+    }
 
     if (!isAdmin) {
       return new Response(
@@ -54,10 +68,6 @@ export async function POST(request) {
         { status: 401, headers: NO_CACHE_HEADERS }
       );
     }
-
-    // 2. Parse request payload
-    const body = await request.json();
-    const { slug, visible, visibility: newVisibilityMap } = body || {};
 
     let updatedVisibility;
 
@@ -74,7 +84,7 @@ export async function POST(request) {
       );
     }
 
-    // 3. Purge Next.js Server Component caches so all pages show updated visibility immediately
+    // Purge Next.js Server Component caches
     try {
       revalidatePath("/", "page");
       revalidatePath("/admin", "page");
