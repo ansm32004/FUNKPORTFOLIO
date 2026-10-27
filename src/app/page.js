@@ -1,3 +1,6 @@
+import { cookies } from "next/headers";
+import { SESSION_COOKIE_NAME, validateSessionToken } from "@/lib/auth";
+import { getVisibility } from "@/lib/visibility";
 import SmoothScroll from "@/components/SmoothScroll";
 import HeroSection from "@/components/HeroSection";
 import SelectedWork from "@/components/SelectedWork";
@@ -9,7 +12,11 @@ import ReviewSection from "@/components/ReviewSection";
 import Footer from "@/components/Footer";
 import SideNav from "@/components/SideNav";
 
-export default function Home() {
+export default async function Home() {
+  const cookieStore = await cookies();
+  const isAdmin = Boolean(validateSessionToken(cookieStore.get(SESSION_COOKIE_NAME)?.value));
+  const visibility = await getVisibility();
+
   return (
     <SmoothScroll>
       <main className="relative min-h-screen w-full bg-[#122B1E] text-slate-900 overflow-x-hidden m-0 p-0">
@@ -20,7 +27,7 @@ export default function Home() {
         <HeroSection />
 
         {/* Selected Work Portfolio Showcase */}
-        <SelectedWork />
+        <SelectedWork initialVisibility={visibility} isAdmin={isAdmin} />
 
         {/* Motion Design Software Timeline Experience Section (All 8 Roles) */}
         <ExperienceTimeline />

@@ -1,51 +1,106 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { ArrowUpRight, Folder } from "lucide-react";
-
+import { ArrowUpRight, Folder, EyeOff, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 
 const PROJECTS = [
   {
+    id: "employee-dash",
+    title: "💼 Employee Dash — Unified Growth",
+    category: "L&D Platform",
+    subtitle: "Connecting learning, coaching, and reflection",
+    description:
+      "A desktop-first employee growth platform that unifies long-term progression, task execution, modular learning, coaching, and contextual AI reflection into a coherent workspace.",
+    tag: "Product Concept",
+    stickyColor: "bg-[#6744C3] text-white",
+    angle: "rotate-1",
+    link: "/case-study/employee-dash"
+  },
+  {
     id: "govt-election",
     title: "🗳️ Govt Election Event Reporting",
-    category: "GIS Admin Analytics & UX Case Study",
+    category: "GIS Analytics",
     subtitle: "Geospatial monitoring & verification at scale",
     description:
       "A high-scale geospatial analytics dashboard designed to validate field report authenticity, detect outside-boundary location activity, and track activity density across 4 administrative tiers.",
     tag: "Featured Case Study",
     stickyColor: "bg-[#0F172A] text-white",
-    angle: "rotate-1",
+    angle: "-rotate-1",
     link: "/case-study/govt-election"
   },
   {
     id: "vammy",
     title: "🦇 Vammy — The Finance Buddy",
-    category: "UX Case Study & Mobile App",
+    category: "Mobile & FinTech",
     subtitle: "A finance tracking app that actually cares",
     description:
       "Modern, intuitive finance tracking mobile app built around Vammy, a vampire mascot gauge that gives real-time visual feedback on monthly spending & budgets.",
     tag: "Featured Case Study",
     stickyColor: "bg-[#2563EB] text-white",
-    angle: "-rotate-1",
+    angle: "rotate-1",
     link: "/case-study/vammy"
   }
 ];
 
-export default function SelectedWork() {
+export default function SelectedWork({
+  initialVisibility = null,
+  isAdmin: initialIsAdmin = false
+}) {
+  const [visibility, setVisibility] = useState(
+    initialVisibility || {
+      "employee-dash": true,
+      "govt-election": true,
+      "vammy": true
+    }
+  );
+  const [isAdmin, setIsAdmin] = useState(initialIsAdmin);
+
+  // Re-fetch on mount so state stays fresh after toggling in /admin
+  useEffect(() => {
+    fetch("/api/case-studies/visibility")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.visibility) {
+          setVisibility(data.visibility);
+        }
+        if (typeof data.isAdmin === "boolean") {
+          setIsAdmin(data.isAdmin);
+        }
+      })
+      .catch((err) => console.error("Could not fetch case study visibility:", err));
+  }, []);
+
+  // Filter projects: Admins see all (with indicator on hidden ones), public sees only visible
+  const displayedProjects = PROJECTS.filter((project) => {
+    if (isAdmin) return true;
+    return visibility[project.id] !== false;
+  });
+
   return (
     <section id="work" className="relative z-10 py-24 px-6 sm:px-12 md:px-20 bg-cutting-mat border-t border-emerald-950/80">
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 pb-6 border-b border-emerald-800/40 gap-6">
           <div>
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-emerald-400 mb-2">
-              <Folder className="w-4 h-4" />
-              <span>01 // Selected Work</span>
+            <div className="flex items-center gap-3 text-xs font-bold uppercase tracking-wider text-emerald-400 mb-2">
+              <div className="flex items-center gap-2">
+                <Folder className="w-4 h-4" />
+                <span>01 // Selected Work</span>
+              </div>
+              {isAdmin && (
+                <Link
+                  href="/admin"
+                  className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/30 transition-colors"
+                >
+                  <ShieldCheck className="w-3 h-3 text-emerald-400" />
+                  Admin Active &bull; Manage
+                </Link>
+              )}
             </div>
             <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
-              Things I've Built & Questioned
+              Things I&apos;ve Built &amp; Questioned
             </h2>
           </div>
           <p className="text-sm sm:text-base text-emerald-100/70 max-w-md font-medium leading-relaxed">
@@ -53,9 +108,31 @@ export default function SelectedWork() {
           </p>
         </div>
 
+        {/* Empty State if All Hidden for Public */}
+        {displayedProjects.length === 0 && (
+          <div className="text-center py-20 px-6 rounded-3xl bg-white/5 border border-emerald-800/40 max-w-xl mx-auto space-y-4">
+            <Folder className="w-12 h-12 text-emerald-400 mx-auto opacity-60" />
+            <h3 className="text-2xl font-bold text-white tracking-tight">
+              Curating New Case Studies
+            </h3>
+            <p className="text-sm text-emerald-100/70 max-w-sm mx-auto leading-relaxed">
+              Case studies are currently undergoing polish and private review. Check back shortly for updated work.
+            </p>
+            <div className="pt-2">
+              <Link
+                href="/admin"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-mono font-bold bg-white text-slate-900 hover:bg-emerald-300 transition-colors shadow-md"
+              >
+                Sign In as Admin
+              </Link>
+            </div>
+          </div>
+        )}
+
         {/* Projects Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-          {PROJECTS.map((project, index) => {
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {displayedProjects.map((project, index) => {
+            const isHidden = visibility[project.id] === false;
             const CardWrapper = project.link ? Link : "div";
             const wrapperProps = project.link ? { href: project.link } : {};
 
@@ -66,19 +143,37 @@ export default function SelectedWork() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: "-60px" }}
                   transition={{ duration: 0.6, delay: index * 0.12 }}
-                  className={`group relative rounded-3xl bg-white p-8 shadow-2xl border border-slate-200 transform ${project.angle} hover:rotate-0 hover:scale-[1.02] transition-transform duration-300 cursor-pointer`}
+                  className={`group relative rounded-3xl bg-white p-6 sm:p-7 md:p-8 shadow-2xl border border-slate-200 transform ${project.angle} hover:rotate-0 hover:scale-[1.02] transition-transform duration-300 cursor-pointer ${
+                    isHidden ? "ring-2 ring-amber-400/80" : ""
+                  }`}
                 >
                   {/* Paper Clip Accent */}
                   <div className="absolute -top-3 left-8 w-8 h-8 rounded-full bg-slate-100 border border-slate-300 shadow-sm flex items-center justify-center text-slate-500">
                     <span className="w-2 h-2 rounded-full bg-slate-700" />
                   </div>
 
-                  {/* Top Metadata Header Bar */}
-                  <div className="flex items-center justify-between mb-6 pt-1">
-                    <span className={`text-xs font-bold px-3 py-1 rounded-full shadow-xs ${project.stickyColor}`}>
+                  {/* Admin Hidden Badge */}
+                  {isAdmin && isHidden && (
+                    <div className="mb-4 px-3 py-1.5 rounded-xl bg-amber-50 border border-amber-300 flex items-center justify-between text-xs text-amber-800 font-mono">
+                      <span className="flex items-center gap-1.5 font-bold">
+                        <EyeOff className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                        Hidden from Public
+                      </span>
+                      <span className="text-[10px] uppercase font-bold text-amber-600 bg-amber-200/60 px-2 py-0.5 rounded">
+                        Admin Only
+                      </span>
+                    </div>
+                  )}
+
+                  {/* Top Metadata Header Bar — Non-breaking & Non-colliding */}
+                  <div className="flex items-center justify-between gap-3 mb-5 pt-1 min-w-0">
+                    <span className={`text-[11px] font-bold px-3 py-1 rounded-full shadow-xs whitespace-nowrap shrink-0 ${project.stickyColor}`}>
                       {project.tag}
                     </span>
-                    <span className="text-xs font-mono font-bold text-slate-400">
+                    <span
+                      className="text-[11px] font-mono font-bold text-slate-400 uppercase tracking-wider text-right truncate min-w-0"
+                      title={project.category}
+                    >
                       {project.category}
                     </span>
                   </div>
@@ -89,7 +184,7 @@ export default function SelectedWork() {
                       <h3 className="text-2xl font-extrabold text-slate-900 group-hover:text-blue-600 transition-colors">
                         {project.title}
                       </h3>
-                      <div className="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 group-hover:bg-slate-900 group-hover:text-white transition-all">
+                      <div className="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 group-hover:bg-slate-900 group-hover:text-white transition-all shrink-0">
                         <ArrowUpRight className="w-4 h-4" />
                       </div>
                     </div>

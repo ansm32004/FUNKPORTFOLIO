@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import CaseStudyHero from "@/components/CaseStudyHero";
 import {
   ArrowLeft,
   ArrowUpRight,
@@ -945,43 +946,51 @@ export default function GovtElectionCaseStudy() {
         /* MAIN EDITORIAL UX CASE STUDY (NARRATIVE FLOW 01 TO 20) */
         <main className="max-w-5xl mx-auto px-6 sm:px-8 py-16 space-y-24 sm:space-y-32">
 
-          {/* 01 — EDITORIAL HERO SECTION */}
-          <section className="space-y-6 max-w-4xl pt-4">
-            <div className="space-y-4">
-              <span className="text-xs font-mono font-medium tracking-widest text-slate-400 uppercase">
-                UX / PRODUCT DESIGN CASE STUDY
-              </span>
-              <h1 className="text-4xl sm:text-6xl font-bold text-slate-900 tracking-tight leading-[1.12]">
-                Election Reporting & Geospatial Monitoring
-              </h1>
-              <p className="text-base sm:text-lg text-slate-500 font-normal leading-relaxed max-w-2xl pt-1">
-                Designing a scalable monitoring experience for verifying election-event reporting across administrative levels.
-              </p>
-            </div>
-
-            {/* Compact Metadata Row */}
-            <div className="pt-6 border-t border-slate-200/60 grid grid-cols-2 sm:grid-cols-4 gap-6 text-xs">
-              <div className="space-y-1">
-                <div className="text-slate-400 font-mono uppercase text-[10px] font-medium">ROLE</div>
-                <div className="font-semibold text-slate-800">Product Designer</div>
-              </div>
-
-              <div className="space-y-1">
-                <div className="text-slate-400 font-mono uppercase text-[10px] font-medium">PROJECT</div>
-                <div className="font-semibold text-slate-800">Election Event Monitoring</div>
-              </div>
-
-              <div className="space-y-1">
-                <div className="text-slate-400 font-mono uppercase text-[10px] font-medium">FOCUS</div>
-                <div className="font-semibold text-slate-800">UX / UI / Information Architecture</div>
-              </div>
-
-              <div className="space-y-1">
-                <div className="text-slate-400 font-mono uppercase text-[10px] font-medium">CONTEXT</div>
-                <div className="font-semibold text-slate-800">Government Operations</div>
-              </div>
-            </div>
-          </section>
+          {/* 01 — PRODUCT-LED HERO SECTION */}
+          <CaseStudyHero
+            category="GOVERNMENT OPERATIONS · PRODUCT DESIGN"
+            title="Making geographic reporting easier to monitor."
+            subtitle="A geospatial dashboard concept for exploring reporting activity and verifying geographic context across administrative levels."
+            metadata={[
+              { label: "ROLE", value: "Product Designer" },
+              { label: "PROJECT", value: "Election Monitoring" },
+              { label: "PLATFORM", value: "Desktop Web Dashboard" },
+              { label: "CONTEXT", value: "Government Operations" },
+            ]}
+            deviceType="laptop"
+            mainImage={{
+              src: "/case-study/govt-election/hifi-flow.png",
+              alt: "Election Event Monitoring Dashboard UI",
+              width: 1800,
+              height: 1100,
+              urlText: "admin.election-monitoring.internal/geospatial",
+            }}
+            accentColor="#2563EB"
+            accentClass="text-blue-600"
+            badgeBgClass="bg-blue-50 text-blue-700 border-blue-200/80"
+            floatingElements={[
+              {
+                position: "top-left",
+                icon: <MapPin className="w-3.5 h-3.5" />,
+                title: "Map-First Navigation",
+                subtitle: "Interactive heatmaps as primary spatial filter",
+              },
+              {
+                position: "top-right",
+                icon: <Layers className="w-3.5 h-3.5" />,
+                title: "Micro-Hierarchy",
+                subtitle: "India → State → AC → Booth",
+              },
+              {
+                position: "bottom-right",
+                icon: <ShieldCheck className="w-3.5 h-3.5" />,
+                title: "Contextual Insights",
+                subtitle: "Real-time verification & anomaly detection",
+              },
+            ]}
+            onImageClick={(img) => setZoomImage(img)}
+            scrollTargetId="overview"
+          />
 
           {/* 02 — PROJECT OVERVIEW */}
           <section id="overview" className="border-t border-slate-200/60 pt-16 grid grid-cols-1 md:grid-cols-12 gap-12 items-start">

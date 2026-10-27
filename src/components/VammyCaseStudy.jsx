@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import CaseStudyHero from "@/components/CaseStudyHero";
 import {
   ArrowLeft,
   ArrowUpRight,
@@ -338,43 +339,53 @@ export default function VammyCaseStudy() {
         /* MAIN EDITORIAL UX CASE STUDY (NARRATIVE FLOW 01 TO 20) */
         <main className="max-w-5xl mx-auto px-6 sm:px-8 py-16 space-y-24 sm:space-y-32">
 
-          {/* 01 — EDITORIAL HERO SECTION */}
-          <section className="space-y-6 max-w-4xl pt-4">
-            <div className="space-y-4">
-              <span className="text-xs font-mono font-medium tracking-widest text-slate-400 uppercase">
-                UX / PRODUCT DESIGN CASE STUDY
-              </span>
-              <h1 className="text-4xl sm:text-6xl font-bold text-slate-900 tracking-tight leading-[1.12]">
-                Vammy — The Student Finance Buddy
-              </h1>
-              <p className="text-base sm:text-lg text-slate-500 font-normal leading-relaxed max-w-2xl pt-1">
-                Designing an emotion-driven mobile expense tracker turning monthly allowance anxiety into visual control.
-              </p>
-            </div>
-
-            {/* Compact Metadata Row */}
-            <div className="pt-6 border-t border-slate-200/60 grid grid-cols-2 sm:grid-cols-4 gap-6 text-xs">
-              <div className="space-y-1">
-                <div className="text-slate-400 font-mono uppercase text-[10px] font-medium">ROLE</div>
-                <div className="font-semibold text-slate-800">Lead UX & Product Designer</div>
+          {/* 01 — PRODUCT-LED HERO SECTION */}
+          <CaseStudyHero
+            category="PERSONAL FINANCE · UX/UI DESIGN"
+            title="A more intuitive way to understand your money."
+            subtitle="A personal finance app concept exploring simpler expense tracking, visual spending feedback, and clearer financial insights."
+            metadata={[
+              { label: "ROLE", value: "Lead UX & Product Designer" },
+              { label: "PROJECT", value: "Vammy App" },
+              { label: "PLATFORM", value: "iOS & Android Mobile" },
+              { label: "FOCUS", value: "Behavioral UX / Gamification" },
+            ]}
+            deviceType="phone"
+            mainImage={{
+              src: "/case-study/vammy/screen-home.png",
+              alt: "Vammy Mobile App Home UI",
+              width: 500,
+              height: 1080,
+            }}
+            accentColor="#2563EB"
+            accentClass="text-blue-600"
+            badgeBgClass="bg-blue-50 text-blue-700 border-blue-200/80"
+            floatingElements={[
+              {
+                position: "center-left",
+                icon: <Zap className="w-3.5 h-3.5" />,
+                title: "3-Tap Quick Log",
+                subtitle: "Sub-3.2s logging keypad powered by Hick's Law",
+              },
+              {
+                position: "top-right",
+                icon: <ShieldCheck className="w-3.5 h-3.5" />,
+                title: "Real-Time Pre-Alerts",
+                subtitle: "Pre-save warning banners before purchase",
+              },
+            ]}
+            customGraphic={
+              <div className="flex items-center gap-3 bg-white/95 backdrop-blur-xl px-4 py-2 rounded-2xl border border-slate-200/80 shadow-md">
+                <VammyMascotSVG mood="happy" />
+                <div className="text-left text-xs">
+                  <span className="font-bold text-slate-900 block">Interactive Mascot Gauge</span>
+                  <span className="text-[11px] text-slate-500">Real-time emotional spending feedback</span>
+                </div>
               </div>
-
-              <div className="space-y-1">
-                <div className="text-slate-400 font-mono uppercase text-[10px] font-medium">PROJECT</div>
-                <div className="font-semibold text-slate-800">Vammy App</div>
-              </div>
-
-              <div className="space-y-1">
-                <div className="text-slate-400 font-mono uppercase text-[10px] font-medium">FOCUS</div>
-                <div className="font-semibold text-slate-800">Behavioral UX / Gamification</div>
-              </div>
-
-              <div className="space-y-1">
-                <div className="text-slate-400 font-mono uppercase text-[10px] font-medium">CONTEXT</div>
-                <div className="font-semibold text-slate-800">Student Personal Finance</div>
-              </div>
-            </div>
-          </section>
+            }
+            onImageClick={(img) => setZoomImage(img)}
+            scrollTargetId="overview"
+          />
 
           {/* 02 — PROJECT OVERVIEW */}
           <section id="overview" className="border-t border-slate-200/60 pt-16 grid grid-cols-1 md:grid-cols-12 gap-12 items-start">
