@@ -4,6 +4,7 @@ import { getVisibility } from "@/lib/visibility";
 import SmoothScroll from "@/components/SmoothScroll";
 import HeroSection from "@/components/HeroSection";
 import SelectedWork from "@/components/SelectedWork";
+import FeaturedBuild from "@/components/FeaturedBuild";
 import ExperienceTimeline from "@/components/ExperienceTimeline";
 import SkillsSection from "@/components/SkillsSection";
 import Philosophy from "@/components/Philosophy";
@@ -31,6 +32,9 @@ export default async function Home() {
 
         {/* Selected Work Portfolio Showcase */}
         <SelectedWork initialVisibility={visibility} isAdmin={isAdmin} />
+
+        {/* Featured engineering build (Sahayika) */}
+        <FeaturedBuild />
 
         {/* Motion Design Software Timeline Experience Section (All 8 Roles) */}
         <ExperienceTimeline />

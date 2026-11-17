@@ -4,12 +4,13 @@ import React, { useState, useEffect } from "react";
 const SECTIONS = [
   { id: "hero", label: "Intro", num: "00" },
   { id: "work", label: "Selected work", num: "01" },
-  { id: "experience", label: "Experience", num: "02" },
-  { id: "skills", label: "Skills", num: "03" },
-  { id: "process", label: "Process", num: "04" },
-  { id: "photography", label: "Photography", num: "05" },
-  { id: "reviews", label: "Kind words", num: "06" },
-  { id: "contact", label: "Contact", num: "07" },
+  { id: "featured", label: "Featured build", num: "02" },
+  { id: "experience", label: "Experience", num: "03" },
+  { id: "skills", label: "Skills", num: "04" },
+  { id: "process", label: "Process", num: "05" },
+  { id: "photography", label: "Photography", num: "06" },
+  { id: "reviews", label: "Kind words", num: "07" },
+  { id: "contact", label: "Contact", num: "08" },
 ];
 
 export default function SideNav() {

@@ -72,7 +72,7 @@ export default function Footer() {
           <div className="grid grid-cols-1 items-center gap-12 border-b border-rule pb-10 sm:gap-14 sm:pb-14 lg:grid-cols-12">
             <div className="lg:col-span-7">
               <p className="flex items-center gap-3 text-[13px] text-ink-3">
-                <span className="tabular-nums text-ink">07</span>
+                <span className="tabular-nums text-ink">08</span>
                 <span className="h-px w-6 bg-rule" />
                 <span>Contact</span>
               </p>

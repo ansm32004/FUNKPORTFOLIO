@@ -80,7 +80,7 @@ export default function ReviewSection() {
     >
       <div className="max-w-7xl mx-auto">
         <SectionHeading
-          index="06"
+          index="07"
           label="Kind words"
           title={<>What people <Accent>say</Accent></>}
           aside={<span className="block max-w-sm md:ml-auto">From founders, product leads and the people I&apos;ve shipped things with.</span>}

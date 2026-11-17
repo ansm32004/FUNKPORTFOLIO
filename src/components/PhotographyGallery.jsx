@@ -189,7 +189,7 @@ export default function PhotographyGallery() {
       <div className="max-w-7xl mx-auto">
 
         <SectionHeading
-          index="05"
+          index="06"
           label="Photography"
           title={<>Through my <Accent>lens</Accent></>}
           aside={

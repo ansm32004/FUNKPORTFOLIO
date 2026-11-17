@@ -158,7 +158,7 @@ export default function SkillsSection() {
       <div className="max-w-7xl mx-auto">
         
         <SectionHeading
-          index="03"
+          index="04"
           label="Skills"
           title={<>The <Accent>skill</Accent> deck</>}
           aside={<span className="block max-w-sm md:ml-auto">A small mixing desk for what I do. Eight pads, tuned to the octave — Sa Re Ga Ma Pa Dha Ni Sa.</span>}

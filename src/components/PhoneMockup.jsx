@@ -52,6 +52,10 @@ export default function PhoneMockup({
   onClick,
   className = "",
   tilt = 0,
+  // Extra space (in cqw) above screenshots whose content starts too close to the
+  // top, so the Dynamic Island doesn't sit on it. Filled with `insetColor`.
+  topInset = 0,
+  insetColor = "#f7f7f7",
 }) {
   const scrolls = height / width > 874 / 402 + 0.02;
 
@@ -80,9 +84,10 @@ export default function PhoneMockup({
           {/* Screen */}
           <div
             data-lenis-prevent
-            className={`relative aspect-[402/874] overflow-x-hidden rounded-[12cqw] bg-[#f7f7f7] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${
+            className={`relative aspect-[402/874] overflow-x-hidden rounded-[12cqw] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${
               scrolls ? "overflow-y-auto overscroll-contain" : "overflow-hidden"
             }`}
+            style={{ backgroundColor: insetColor, paddingTop: topInset ? `${topInset}cqw` : undefined }}
           >
             {statusBar && <StatusBar />}
             <Image

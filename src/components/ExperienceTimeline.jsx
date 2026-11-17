@@ -232,7 +232,7 @@ export default function ExperienceTimeline() {
       <div className="max-w-7xl mx-auto">
         
         <SectionHeading
-          index="02"
+          index="03"
           label="Experience"
           title={<>Work, on a <Accent>timeline</Accent></>}
           aside={<span className="block max-w-sm md:ml-auto">Laid out like a motion editor — bar length is time spent. Hit play, or hover (tap, on a phone) a role for the honest version.</span>}

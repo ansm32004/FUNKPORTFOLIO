@@ -100,7 +100,7 @@ export default function Philosophy() {
     >
       <div className="max-w-7xl mx-auto">
         <SectionHeading
-          index="04"
+          index="05"
           label="Process"
           title={<>How I <Accent>work</Accent></>}
           aside={
