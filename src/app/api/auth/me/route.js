@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import { SESSION_COOKIE_NAME, validateSessionToken } from "@/lib/auth";
+import { SESSION_COOKIE_NAME, validateSessionToken, ADMIN_USERNAME } from "@/lib/auth";
 
 export async function GET() {
   try {
@@ -9,7 +9,7 @@ export async function GET() {
 
     return Response.json({
       authenticated: Boolean(isAuthenticated),
-      user: isAuthenticated ? "ansm" : null,
+      user: isAuthenticated ? ADMIN_USERNAME : null,
     });
   } catch (err) {
     return Response.json(

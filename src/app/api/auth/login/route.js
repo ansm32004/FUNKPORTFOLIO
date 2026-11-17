@@ -3,6 +3,7 @@ import {
   validateCredentials,
   generateSessionToken,
   SESSION_COOKIE_NAME,
+  ADMIN_USERNAME,
 } from "@/lib/auth";
 
 export async function POST(request) {
@@ -33,7 +34,7 @@ export async function POST(request) {
 
     return Response.json({
       success: true,
-      user: "ansm",
+      user: ADMIN_USERNAME,
       message: "Authentication successful",
     });
   } catch (err) {

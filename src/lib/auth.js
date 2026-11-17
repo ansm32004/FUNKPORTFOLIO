@@ -1,24 +1,36 @@
 import crypto from "crypto";
 
-export const ADMIN_USERNAME = "ansm";
-export const ADMIN_PASSWORD = "ansmfx32004";
+// Credentials and signing secret come from the environment (.env.local locally,
+// project settings in production). Nothing secret lives in the source.
+export const ADMIN_USERNAME = process.env.ADMIN_USERNAME || "";
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "";
+const AUTH_SECRET = process.env.ADMIN_AUTH_SECRET || "";
 export const SESSION_COOKIE_NAME = "portfolio_admin_session";
 
-// Secret for signing session tokens
-const AUTH_SECRET = process.env.ADMIN_AUTH_SECRET || "ansm-portfolio-secret-key-32004";
+const isConfigured = () => Boolean(ADMIN_USERNAME && ADMIN_PASSWORD && AUTH_SECRET);
+
+// Constant-time string comparison (hash first so lengths always match).
+function safeEqual(a, b) {
+  const ha = crypto.createHash("sha256").update(String(a)).digest();
+  const hb = crypto.createHash("sha256").update(String(b)).digest();
+  return crypto.timingSafeEqual(ha, hb);
+}
 
 /**
- * Validates provided user credentials
+ * Validates provided user credentials. Fails closed if env vars are missing.
  */
 export function validateCredentials(username, password) {
-  if (!username || !password) return false;
-  return username.trim() === ADMIN_USERNAME && password === ADMIN_PASSWORD;
+  if (!isConfigured() || !username || !password) return false;
+  const userOk = safeEqual(username.trim(), ADMIN_USERNAME);
+  const passOk = safeEqual(password, ADMIN_PASSWORD);
+  return userOk && passOk;
 }
 
 /**
  * Generates a signed session token
  */
 export function generateSessionToken() {
+  if (!isConfigured()) throw new Error("Admin auth is not configured");
   const timestamp = Date.now();
   const payload = `${ADMIN_USERNAME}:${timestamp}`;
   const signature = crypto
@@ -32,7 +44,7 @@ export function generateSessionToken() {
  * Validates a session token signature and expiration (7 days)
  */
 export function validateSessionToken(token) {
-  if (!token || typeof token !== "string") return false;
+  if (!isConfigured() || !token || typeof token !== "string") return false;
 
   const parts = token.split(":");
   if (parts.length !== 3) return false;

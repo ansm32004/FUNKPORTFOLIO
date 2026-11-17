@@ -3,6 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import { ChevronDown, Maximize2 } from "lucide-react";
+import PhoneMockup from "@/components/PhoneMockup";
 
 export default function CaseStudyHero({
   category = "PRODUCT DESIGN",
@@ -13,8 +14,8 @@ export default function CaseStudyHero({
   mainImage,
   floatingElements = [],
   accentColor = "#2563EB",
-  accentClass = "text-blue-600",
-  badgeBgClass = "bg-blue-50 text-blue-700 border-blue-200/80",
+  accentClass = "text-ink",
+  badgeBgClass = "bg-note-yellow/40 text-ink border-note-yellow",
   onImageClick,
   scrollTargetId = "overview",
   customGraphic = null,
@@ -33,39 +34,32 @@ export default function CaseStudyHero({
       ─────────────────────────────────────────────────────────────────── */}
       <div className="space-y-4 max-w-3xl">
         {/* Category Label */}
-        <div className="inline-flex items-center gap-2">
-          <span
-            className={`text-xs font-mono font-bold tracking-widest uppercase px-3 py-1 rounded-full border ${badgeBgClass}`}
-          >
-            <span
-              className="inline-block w-1.5 h-1.5 rounded-full mr-1.5 animate-pulse"
-              style={{ backgroundColor: accentColor }}
-            />
-            {category}
-          </span>
-        </div>
+        <p className="inline-flex items-center gap-2 text-[13px] text-ink-2">
+          <span className="h-1.5 w-1.5 rounded-full bg-pin" />
+          {category}
+        </p>
 
         {/* Confident 1-2 Line Headline */}
-        <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold text-slate-900 tracking-tight leading-[1.12]">
+        <h1 className="text-[40px] font-medium leading-[1.04] tracking-[-0.035em] text-ink sm:text-6xl md:text-[72px]">
           {title}
         </h1>
 
         {/* Concise 1-2 Sentence Subtitle */}
         {subtitle && (
-          <p className="text-base sm:text-lg text-slate-500 font-normal leading-relaxed max-w-2xl pt-0.5">
+          <p className="max-w-2xl pt-1 text-[17px] leading-relaxed text-ink-2">
             {subtitle}
           </p>
         )}
 
         {/* Compact Metadata Row */}
         {metadata.length > 0 && (
-          <div className="pt-4 border-t border-slate-200/60 grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 text-xs">
+          <div className="mt-4 grid grid-cols-2 gap-x-6 gap-y-4 border-t border-rule pt-5 text-[14px] sm:grid-cols-4">
             {metadata.map((item, idx) => (
               <div key={idx} className="space-y-0.5">
-                <span className="text-slate-400 font-mono uppercase text-[10px] font-semibold tracking-wider">
-                  {item.label}
+                <span className="text-[12px] text-ink-3">
+                  {item.label.charAt(0) + item.label.slice(1).toLowerCase()}
                 </span>
-                <p className="font-bold text-slate-800 truncate">{item.value}</p>
+                <p className="text-ink">{item.value}</p>
               </div>
             ))}
           </div>
@@ -82,24 +76,24 @@ export default function CaseStudyHero({
             {/* Monitor / Laptop Screen Lid */}
             <div
               onClick={() => onImageClick && onImageClick(mainImage)}
-              className="relative rounded-t-2xl sm:rounded-t-3xl bg-slate-900 p-2 sm:p-3 md:p-3.5 shadow-2xl border border-slate-800 cursor-pointer transition-transform duration-300 group-hover:scale-[1.005]"
+              className="relative rounded-t-2xl sm:rounded-t-3xl bg-ink p-2 sm:p-3 md:p-3.5 shadow-2xl border border-slate-800 cursor-pointer transition-transform duration-300 group-hover:scale-[1.005]"
             >
               {/* Webcam dot */}
               <div className="absolute top-1.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-slate-700 ring-1 ring-slate-800" />
 
               {/* Screen Frame */}
-              <div className="rounded-lg sm:rounded-xl overflow-hidden bg-slate-950 border border-slate-800/80 relative">
+              <div className="rounded-lg sm:rounded-[4px] overflow-hidden bg-slate-950 border border-slate-800/80 relative">
                 {/* Browser Sub-Header URL Bar */}
-                <div className="bg-slate-900/90 px-3 py-1.5 flex items-center justify-between border-b border-slate-800/70 text-[10px] text-slate-400 font-mono">
+                <div className="bg-slate-900/90 px-3 py-1.5 flex items-center justify-between border-b border-slate-800/70 text-[10px] text-ink-3 font-mono">
                   <div className="flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-rose-500/80" />
                     <span className="w-2 h-2 rounded-full bg-amber-500/80" />
                     <span className="w-2 h-2 rounded-full bg-emerald-500/80" />
-                    <span className="ml-2 text-slate-400 truncate hidden sm:inline">
+                    <span className="ml-2 text-ink-3 truncate hidden sm:inline">
                       {mainImage.urlText || "app.internal/dashboard"}
                     </span>
                   </div>
-                  <div className="flex items-center gap-1 text-[10px] text-slate-400 hover:text-white transition-colors">
+                  <div className="flex items-center gap-1 text-[10px] text-ink-3 hover:text-white transition-colors">
                     <Maximize2 className="w-3 h-3" />
                     <span className="hidden sm:inline">Click to Expand</span>
                   </div>
@@ -126,44 +120,23 @@ export default function CaseStudyHero({
 
             {/* Ambient Base Shadow */}
             <div
-              className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-4/5 h-8 blur-2xl -z-10 rounded-full opacity-30"
-              style={{ backgroundColor: accentColor }}
+              className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-4/5 h-8 blur-2xl -z-10 rounded-full bg-black opacity-25"
             />
           </div>
         )}
 
         {/* MOBILE SMARTPHONE DEVICE FRAME */}
         {deviceType === "phone" && (
-          <div className="relative mx-auto w-full max-w-sm flex items-center justify-center group">
-            {/* Phone Chassis */}
-            <div
-              onClick={() => onImageClick && onImageClick(mainImage)}
-              className="relative w-full max-w-[280px] sm:max-w-[320px] rounded-[44px] bg-slate-900 p-3 sm:p-4 shadow-2xl border border-slate-800 cursor-pointer transition-transform duration-300 group-hover:scale-[1.01]"
-            >
-              {/* Dynamic Island */}
-              <div className="absolute top-4 left-1/2 -translate-x-1/2 w-20 h-4 bg-slate-950 rounded-full z-20 flex items-center justify-end pr-2">
-                <span className="w-2 h-2 rounded-full bg-slate-800" />
-              </div>
-
-              {/* Inner Screen */}
-              <div className="rounded-[34px] overflow-hidden bg-white border border-slate-800/80 relative">
-                <Image
-                  src={mainImage.src}
-                  alt={mainImage.alt}
-                  width={mainImage.width || 500}
-                  height={mainImage.height || 1080}
-                  className="w-full h-auto block"
-                  priority
-                />
-              </div>
-            </div>
-
-            {/* Ambient Glow */}
-            <div
-              className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-3/4 h-8 blur-2xl -z-10 rounded-full opacity-35"
-              style={{ backgroundColor: accentColor }}
-            />
-          </div>
+          <PhoneMockup
+            src={mainImage.src}
+            alt={mainImage.alt}
+            width={mainImage.width || 402}
+            height={mainImage.height || 874}
+            statusBar={mainImage.statusBar}
+            priority
+            onClick={onImageClick ? () => onImageClick(mainImage) : undefined}
+            className="max-w-[260px] sm:max-w-[300px]"
+          />
         )}
 
         {/* ─────────────────────────────────────────────────────────────────
@@ -187,26 +160,23 @@ export default function CaseStudyHero({
                 return (
                   <div
                     key={idx}
-                    className={`${positionStyles} z-20 bg-white/95 backdrop-blur-xl p-3.5 rounded-2xl border border-slate-200/90 shadow-xl shadow-slate-900/10 space-y-1`}
+                    className={`${positionStyles} z-20 bg-paper/95 backdrop-blur-xl p-3.5 rounded-[6px] border border-rule shadow-xl shadow-black/20 space-y-1`}
                   >
                     <div className="flex items-center gap-2">
                       {elem.icon && (
                         <div
-                          className="w-6 h-6 rounded-lg flex items-center justify-center text-xs shrink-0"
-                          style={{
-                            backgroundColor: `${accentColor}15`,
-                            color: accentColor,
-                          }}
+                          className="w-6 h-6 rounded-full flex items-center justify-center text-xs text-ink shrink-0"
+                          style={{ backgroundColor: accentColor }}
                         >
                           {elem.icon}
                         </div>
                       )}
-                      <span className="text-[11px] font-bold text-slate-900 leading-tight">
+                      <span className="text-[12px] font-medium text-ink leading-tight">
                         {elem.title}
                       </span>
                     </div>
                     {elem.subtitle && (
-                      <p className="text-[10px] text-slate-500 leading-relaxed pl-8">
+                      <p className="text-[10px] text-ink-3 leading-relaxed pl-8">
                         {elem.subtitle}
                       </p>
                     )}
@@ -220,25 +190,22 @@ export default function CaseStudyHero({
               {floatingElements.map((elem, idx) => (
                 <div
                   key={idx}
-                  className="bg-white/90 p-3 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-2.5 text-left"
+                  className="bg-paper/90 p-3 rounded-[6px] border border-rule flex items-center gap-2.5 text-left"
                 >
                   {elem.icon && (
                     <div
-                      className="w-7 h-7 rounded-lg flex items-center justify-center text-xs shrink-0"
-                      style={{
-                        backgroundColor: `${accentColor}15`,
-                        color: accentColor,
-                      }}
+                      className="w-7 h-7 rounded-full flex items-center justify-center text-xs text-ink shrink-0"
+                      style={{ backgroundColor: accentColor }}
                     >
                       {elem.icon}
                     </div>
                   )}
                   <div className="space-y-0.5">
-                    <span className="text-xs font-bold text-slate-900 block leading-tight">
+                    <span className="text-[13px] font-medium text-ink block leading-tight">
                       {elem.title}
                     </span>
                     {elem.subtitle && (
-                      <span className="text-[10px] text-slate-500 block leading-snug">
+                      <span className="text-[10px] text-ink-3 block leading-snug">
                         {elem.subtitle}
                       </span>
                     )}
@@ -261,12 +228,12 @@ export default function CaseStudyHero({
       <div className="pt-4 sm:pt-6 flex flex-col items-center justify-center text-center space-y-1.5">
         <button
           onClick={scrollToNext}
-          className="inline-flex items-center gap-1.5 text-xs font-mono font-semibold text-slate-400 hover:text-slate-900 transition-colors group cursor-pointer"
+          className="group inline-flex cursor-pointer items-center gap-1.5 font-handwriting text-[20px] text-ink-3 transition-colors hover:text-ink"
         >
-          <span>Explore Case Study</span>
+          <span>read on</span>
           <ChevronDown className="w-3.5 h-3.5 group-hover:translate-y-0.5 transition-transform" />
         </button>
-        <div className="w-px h-6 bg-gradient-to-b from-slate-200 to-transparent" />
+        <div className="h-6 w-px bg-rule" />
       </div>
     </section>
   );

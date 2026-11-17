@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Camera, MapPin, RotateCw, LayoutGrid, Shuffle } from "lucide-react";
+import { RotateCw } from "lucide-react";
+import { SectionHeading, Accent, Tape } from "./Stationery";
 
 const DESK_PHOTOS = [
   {
@@ -75,6 +76,15 @@ const DESK_PHOTOS = [
 export default function PhotographyGallery() {
   const containerRef = useRef(null);
   const [isScatterView, setIsScatterView] = useState(true);
+  // Only allow dragging with a mouse/trackpad — on touch screens it would hijack page scroll.
+  const [canDrag, setCanDrag] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const update = () => setCanDrag(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
   const [flippedCards, setFlippedCards] = useState({});
 
   const toggleCardFlip = (id, e) => {
@@ -89,23 +99,21 @@ export default function PhotographyGallery() {
     return (
       <motion.div
         key={photo.id}
-        drag={isScatterView}
+        drag={isScatterView && canDrag}
         dragConstraints={containerRef}
         dragElastic={0.15}
-        whileHover={{ scale: 1.04, zIndex: 40 }}
+        whileHover={{ y: -4, zIndex: 40 }}
         whileTap={{ cursor: "grabbing" }}
         style={{ rotate: rotationDeg }}
-        className="relative cursor-grab group"
+        className={`group relative ${canDrag && isScatterView ? "cursor-grab" : ""}`}
       >
         {/* Masking Tape Graphic Accent */}
-        <div
-          className={`absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-6 bg-amber-100/90 backdrop-blur-xs border border-amber-200/60 shadow-xs z-30 pointer-events-none ${photo.tapeRotation}`}
-        />
+        <Tape className="-top-3 left-1/2 -translate-x-1/2" rotate={photo.initialRotation * -0.8} width={84} />
 
         {/* 3D FLIPPABLE PHYSICAL PHOTO PRINT CARD */}
         <div
           onClick={(e) => toggleCardFlip(photo.id, e)}
-          className="relative w-full bg-white rounded-2xl p-4 shadow-xl border border-slate-200/90 space-y-3 transition-shadow duration-300 group-hover:shadow-2xl overflow-hidden cursor-pointer"
+          className="paper relative w-full cursor-pointer overflow-hidden rounded-[3px] p-3 pb-4"
           style={{ perspective: "1000px" }}
         >
           <motion.div
@@ -116,35 +124,28 @@ export default function PhotographyGallery() {
           >
             {/* FRONT SIDE: PRINTED PHOTOGRAPH */}
             <div style={{ backfaceVisibility: "hidden" }} className="space-y-3">
-              <div className="relative aspect-4/3 rounded-xl overflow-hidden bg-slate-900 border border-slate-200">
+              <div className="relative aspect-4/3 overflow-hidden rounded-[1px] bg-ink">
                 <img
                   src={photo.src}
                   alt={photo.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 pointer-events-none"
+                  className="pointer-events-none h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
                 />
 
-                <div className="absolute top-2.5 right-2.5 bg-slate-900/80 backdrop-blur-md text-emerald-400 text-[10px] font-bold px-2.5 py-1 rounded-full border border-slate-700/80 flex items-center gap-1">
-                  <MapPin className="w-3 h-3 text-rose-400" />
-                  <span>{photo.location}</span>
-                </div>
               </div>
 
-              <div className="flex items-center justify-between pt-1">
-                <div>
-                  <span className="text-[10px] font-bold text-blue-600 block">
-                    {photo.tagEmoji} {photo.category}
-                  </span>
-                  <h4 className="text-sm font-extrabold text-slate-900 truncate max-w-[200px]">
+              <div className="flex items-end justify-between gap-3 px-1 pt-1">
+                <div className="min-w-0">
+                  <h4 className="truncate font-handwriting text-[22px] leading-tight text-ink">
                     {photo.title}
                   </h4>
+                  <span className="text-[12px] text-ink-3">
+                    {photo.location} · {photo.category}
+                  </span>
                 </div>
-
-                <div
-                  title="Click to flip photo for sharpie note on back"
-                  className="p-2 rounded-xl bg-slate-100 group-hover:bg-slate-200 text-slate-700 border border-slate-200 transition-colors shrink-0"
-                >
-                  <RotateCw className="w-4 h-4" />
-                </div>
+                <RotateCw
+                  aria-label="Flip for note"
+                  className="mb-1 h-4 w-4 shrink-0 text-ink-3 transition-colors group-hover:text-ink"
+                />
               </div>
             </div>
 
@@ -156,25 +157,23 @@ export default function PhotographyGallery() {
                 position: "absolute",
                 inset: 0,
               }}
-              className="bg-amber-50 rounded-xl p-5 border border-amber-200 flex flex-col justify-between space-y-4 text-slate-900 shadow-inner"
+              className="flex flex-col justify-between space-y-4 rounded-[1px] bg-paper-2 p-5 text-ink"
             >
               <div className="space-y-2">
-                <div className="flex items-center justify-between border-b border-amber-200/80 pb-2">
-                  <span className="text-[10px] font-mono font-extrabold uppercase text-amber-800">
-                    📷 SHOOTING NOTE
-                  </span>
-                  <span className="text-[10px] font-bold text-amber-800 flex items-center gap-1">
-                    <RotateCw className="w-3 h-3" />
-                    Flip Front
+                <div className="flex items-center justify-between border-b border-rule pb-2 text-[12px] text-ink-3">
+                  <span>On the back</span>
+                  <span className="flex items-center gap-1">
+                    <RotateCw className="h-3 w-3" />
+                    Flip
                   </span>
                 </div>
 
-                <p className="font-handwriting text-base sm:text-lg text-amber-950 font-bold leading-relaxed pt-1">
-                  "{photo.handwrittenNote}"
+                <p className="pt-1 font-handwriting text-[21px] leading-snug text-ink">
+                  {photo.handwrittenNote}
                 </p>
               </div>
 
-              <div className="pt-2 border-t border-amber-200/80 flex items-center justify-between text-[10px] font-mono font-extrabold text-amber-800">
+              <div className="flex items-center justify-between border-t border-rule pt-2 font-mono text-[11px] text-ink-3">
                 <span>{photo.exif}</span>
                 <span>{photo.location}</span>
               </div>
@@ -186,55 +185,35 @@ export default function PhotographyGallery() {
   };
 
   return (
-    <section id="photography" className="relative z-10 py-24 px-6 sm:px-12 md:px-20 bg-cutting-mat border-t border-emerald-950/80 select-none">
+    <section id="photography" className="relative z-10 py-16 sm:py-24 px-4 sm:px-12 md:px-20 bg-cutting-mat select-none">
       <div className="max-w-7xl mx-auto">
 
-        {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-50px" }}
-          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="flex flex-col md:flex-row md:items-end justify-between mb-10 pb-6 border-b border-emerald-800/40 gap-6"
-        >
-          <div>
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-emerald-400 mb-2">
-              <Camera className="w-4 h-4" />
-              <span>05 // Tabletop Lens Archive</span>
+        <SectionHeading
+          index="05"
+          label="Photography"
+          title={<>Through my <Accent>lens</Accent></>}
+          aside={
+            <div className="flex flex-col items-start gap-4 md:items-end">
+              <span className="block max-w-sm">Prints scattered on the desk. Flip one over for the note on the back — or drag them around, if you&apos;re on a computer.</span>
+              <div className="inline-flex rounded-full border border-white/15 p-1 text-[13px]">
+                {[
+                  [true, "Scatter"],
+                  [false, "Tidy up"],
+                ].map(([scatter, label]) => (
+                  <button
+                    key={label}
+                    onClick={() => setIsScatterView(scatter)}
+                    className={`cursor-pointer rounded-full px-3.5 py-1 transition-colors ${
+                      isScatterView === scatter ? "bg-chalk text-ink" : "text-chalk-2 hover:text-chalk"
+                    }`}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
             </div>
-            <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
-              Through My Lens
-            </h2>
-          </div>
-
-          {/* Desktop Tabletop Controls */}
-          <div className="flex items-center gap-3">
-            <div className="bg-emerald-950/70 border border-emerald-800/60 px-4 py-2 rounded-2xl text-xs text-emerald-200/90 font-medium hidden sm:flex items-center gap-2">
-              <span>🖐️ Drag photos to rearrange</span>
-              <span>•</span>
-              <span>🔄 Click any photo to flip for sharpie notes</span>
-            </div>
-
-            <div className="flex items-center gap-1.5 bg-emerald-950/80 p-1.5 rounded-2xl border border-emerald-800/60">
-              <button
-                onClick={() => setIsScatterView(true)}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-extrabold flex items-center gap-1.5 transition-all cursor-pointer ${isScatterView ? "bg-white text-slate-900 shadow-md" : "text-emerald-300 hover:text-white"
-                  }`}
-              >
-                <Shuffle className="w-3.5 h-3.5" />
-                <span>Scatter 🎲</span>
-              </button>
-              <button
-                onClick={() => setIsScatterView(false)}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-extrabold flex items-center gap-1.5 transition-all cursor-pointer ${!isScatterView ? "bg-white text-slate-900 shadow-md" : "text-emerald-300 hover:text-white"
-                  }`}
-              >
-                <LayoutGrid className="w-3.5 h-3.5" />
-                <span>Grid 📐</span>
-              </button>
-            </div>
-          </div>
-        </motion.div>
+          }
+        />
 
         {/* 5 PHOTOS CANVAS: 3 ON TOP, 2 ON BOTTOM */}
         <div ref={containerRef} className="relative min-h-[600px] w-full py-4 space-y-8">

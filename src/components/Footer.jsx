@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { Mail, Send, CheckCircle2, MessageSquare, MapPin, Lock, Shield } from "lucide-react";
+import { ArrowUpRight, Lock } from "lucide-react";
+import { Pin, Tape, Accent } from "./Stationery";
 
 export default function Footer() {
   const [time, setTime] = useState("");
@@ -17,14 +18,13 @@ export default function Footer() {
         now.toLocaleTimeString("en-US", {
           hour: "2-digit",
           minute: "2-digit",
-          second: "2-digit",
+          timeZone: "Asia/Kolkata",
           hour12: false,
-          timeZoneName: "short",
-        })
+        }) + " IST"
       );
     };
     updateTime();
-    const interval = setInterval(updateTime, 1000);
+    const interval = setInterval(updateTime, 30000);
     return () => clearInterval(interval);
   }, []);
 
@@ -63,152 +63,127 @@ export default function Footer() {
   };
 
   return (
-    <footer id="contact" className="relative z-10 py-20 px-6 sm:px-12 md:px-20 bg-cutting-mat border-t border-emerald-950/80">
+    <footer id="contact" className="relative z-10 py-16 sm:py-24 px-4 sm:px-12 md:px-20 bg-cutting-mat">
       <div className="max-w-7xl mx-auto">
-        <div className="bg-white rounded-3xl p-8 sm:p-14 shadow-2xl border border-slate-200 relative overflow-hidden">
+        <div className="paper relative p-6 sm:p-14">
+          <Pin className="-top-2 left-12" />
+          <Pin className="-top-2 right-12" />
 
-          {/* Main CTA Section */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center pb-12 border-b border-slate-200">
-
-            <div className="lg:col-span-7 space-y-6">
-              <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-emerald-600">
-                <Mail className="w-4 h-4" />
-                <span>08 // Initiate Contact</span>
-              </div>
-
-              <h2 className="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight">
-                Let&apos;s build something cool. <br className="hidden sm:inline" />
-                <span className="text-emerald-700">Or argue whether 16px is better than 20px.</span>
-              </h2>
-
-              <p className="text-sm sm:text-base text-slate-600 font-medium max-w-lg leading-relaxed">
-                Email me. Message me. Send memes. Recruiters get priority.
+          <div className="grid grid-cols-1 items-center gap-12 border-b border-rule pb-10 sm:gap-14 sm:pb-14 lg:grid-cols-12">
+            <div className="lg:col-span-7">
+              <p className="flex items-center gap-3 text-[13px] text-ink-3">
+                <span className="tabular-nums text-ink">07</span>
+                <span className="h-px w-6 bg-rule" />
+                <span>Contact</span>
               </p>
 
-              <div className="pt-2 flex flex-wrap items-center gap-4">
+              <h2 className="mt-5 text-4xl font-medium leading-[1.05] tracking-[-0.03em] text-ink sm:text-5xl">
+                Let&apos;s build something good.
+                <br />
+                <span className="text-ink-3">
+                  Or argue about <Accent className="whitespace-nowrap text-ink">16px vs 20px.</Accent>
+                </span>
+              </h2>
+
+              <p className="mt-6 max-w-md text-[16px] leading-relaxed text-ink-2">
+                Email, DM, or send memes. Recruiters get priority.
+              </p>
+
+              <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
                 <a
                   href="mailto:rkm32004@gmail.com"
-                  className="px-7 py-3.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm rounded-full shadow-lg transition-all inline-block"
+                  className="group inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3 text-[14px] font-medium text-paper transition-colors hover:bg-black"
                 >
                   rkm32004@gmail.com
+                  <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
                 </a>
-
-                <div className="flex items-center gap-2 px-4 py-3 rounded-full bg-slate-100 border border-slate-200 text-xs font-semibold text-slate-700">
-                  <MapPin className="w-4 h-4 text-rose-500" />
-                  <span>New Delhi, India</span>
-                </div>
+                <span className="text-[14px] text-ink-3">New Delhi, India · {time || "IST"}</span>
               </div>
             </div>
 
-            {/* Pinned Yellow Note */}
+            {/* Sticky-note contact form */}
             <div className="lg:col-span-5">
-              <div className="relative bg-[#EAF235] rounded-3xl p-7 shadow-cast-yellow border border-yellow-300 transform rotate-2">
-                <div className="flex items-center gap-2 mb-3 text-amber-950">
-                  <MessageSquare className="w-4 h-4 text-amber-900" />
-                  <span className="text-xs font-bold uppercase tracking-wider">Send a Message</span>
-                </div>
+              <div className="shadow-note note-texture relative mx-auto max-w-md rotate-[1.5deg] rounded-[2px] bg-note-yellow p-6 sm:p-8">
+                <Tape className="-top-3 left-1/2 -translate-x-1/2" rotate={-3} width={100} />
+                <p className="font-handwriting text-[28px] leading-none text-[#3d3209]">Leave a note</p>
 
                 {submitted ? (
-                  <div className="py-6 text-center space-y-2">
-                    <CheckCircle2 className="w-8 h-8 text-emerald-700 mx-auto" />
-                    <p className="text-xs font-bold text-slate-900">Message Sent!</p>
-                    <p className="text-[11px] text-slate-700">Thanks for reaching out. I&apos;ll get back to you shortly.</p>
+                  <div className="py-10 text-center">
+                    <p className="font-handwriting text-[26px] text-[#3d3209]">Got it — thank you!</p>
+                    <p className="mt-1 text-[13px] text-[#3d3209]/70">I&apos;ll get back to you shortly.</p>
                   </div>
                 ) : (
-                  <form onSubmit={handleSubmitNote} className="space-y-3">
+                  <form onSubmit={handleSubmitNote} className="mt-4 space-y-2">
                     <input
                       type="text"
                       required
+                      aria-label="Your name"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      placeholder="Your name"
-                      className="w-full bg-yellow-100/80 border border-yellow-300 rounded-xl p-3 text-xs font-medium text-amber-950 placeholder-amber-800/50 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                      placeholder="your name"
+                      className="w-full border-0 border-b border-[#3d3209]/25 bg-transparent px-0 py-2 font-handwriting text-[22px] text-[#3d3209] placeholder:text-[#3d3209]/45 focus:border-[#3d3209] focus:outline-none focus:ring-0"
                     />
                     <input
                       type="email"
                       required
+                      aria-label="Your email"
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      placeholder="Your email address"
-                      className="w-full bg-yellow-100/80 border border-yellow-300 rounded-xl p-3 text-xs font-medium text-amber-950 placeholder-amber-800/50 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                      placeholder="your email"
+                      className="w-full border-0 border-b border-[#3d3209]/25 bg-transparent px-0 py-2 font-handwriting text-[22px] text-[#3d3209] placeholder:text-[#3d3209]/45 focus:border-[#3d3209] focus:outline-none focus:ring-0"
                     />
                     <textarea
                       required
+                      aria-label="Message"
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                      placeholder="Type your message, offer, or meme link here..."
+                      placeholder="what's on your mind?"
                       rows={3}
-                      className="w-full bg-yellow-100/80 border border-yellow-300 rounded-xl p-3 text-xs font-medium text-amber-950 placeholder-amber-800/50 focus:outline-none focus:ring-2 focus:ring-amber-500 resize-none"
+                      className="w-full border-0 border-b border-[#3d3209]/25 bg-transparent px-0 py-2 font-handwriting text-[22px] text-[#3d3209] placeholder:text-[#3d3209]/45 focus:border-[#3d3209] focus:outline-none focus:ring-0 resize-none"
                     />
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="w-full py-2.5 bg-amber-950 hover:bg-black disabled:opacity-70 disabled:cursor-not-allowed text-amber-50 font-bold text-xs rounded-xl transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+                      className="mt-4 w-full cursor-pointer rounded-full bg-[#3d3209] py-2.5 text-[14px] font-medium text-note-yellow transition-colors hover:bg-ink disabled:cursor-not-allowed disabled:opacity-70"
                     >
-                      <span>{isSubmitting ? "Sending..." : "Send Message"}</span>
-                      <Send className="w-3.5 h-3.5" />
+                      {isSubmitting ? "Sending…" : "Send note"}
                     </button>
                   </form>
                 )}
               </div>
             </div>
-
           </div>
 
-          {/* Footer Meta Details */}
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between pt-8 gap-6 text-xs font-semibold text-slate-500">
-            <div className="flex flex-col gap-1">
-              <div className="flex items-center gap-3">
-                <span className="text-slate-900 font-bold">ANSHUMAN MISHRA</span>
-                <span>•</span>
-                <span>Designed. Developed. Overthought. Repeated.</span>
-              </div>
-              <p className="text-[11px] text-slate-400 font-normal">
-                © 2026 Anshuman Mishra. No designers were harmed while making this portfolio. (Developers... we&apos;re still investigating.)
+          <div className="flex flex-col gap-6 pt-8 text-[13px] text-ink-3 md:flex-row md:items-center md:justify-between">
+            <div>
+              <span className="text-ink">Anshuman Mishra</span>
+              <span className="mx-2">·</span>
+              Designed. Developed. Overthought. Repeated.
+              <p className="mt-1 text-[12px]">
+                © 2026. No designers were harmed making this portfolio. Developers — we&apos;re still investigating.
               </p>
             </div>
 
-            <div className="flex items-center gap-5 text-slate-600">
-              <a href="https://twitter.com" target="_blank" rel="noreferrer" className="hover:text-slate-900 transition-colors">
-                Twitter / X
+            <div className="flex items-center gap-6">
+              <a href="https://twitter.com" target="_blank" rel="noreferrer" className="transition-colors hover:text-ink">
+                Twitter
               </a>
-              <a href="https://github.com/ansm32004" target="_blank" rel="noreferrer" className="hover:text-slate-900 transition-colors">
+              <a href="https://github.com/ansm32004" target="_blank" rel="noreferrer" className="transition-colors hover:text-ink">
                 GitHub
               </a>
-              <a href="https://www.linkedin.com/in/ansmfx/" target="_blank" rel="noreferrer" className="hover:text-slate-900 transition-colors">
+              <a href="https://www.linkedin.com/in/ansmfx/" target="_blank" rel="noreferrer" className="transition-colors hover:text-ink">
                 LinkedIn
               </a>
-            </div>
-
-            <div className="flex items-center gap-3 flex-wrap">
-              <div className="flex items-center gap-2 bg-slate-100 px-3 py-1.5 rounded-full border border-slate-200 text-[11px] font-bold text-slate-700">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                <span>IST: {time || "10:58:06 IST"}</span>
-              </div>
-
               <Link
                 href="/admin"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-900 hover:text-white border border-slate-200 text-[11px] font-mono font-bold text-slate-600 transition-all cursor-pointer group"
-                title="Admin Access & Case Study Visibility"
+                className="inline-flex items-center gap-1 transition-colors hover:text-ink"
+                title="Admin"
               >
-                <Lock className="w-3 h-3 text-slate-400 group-hover:text-emerald-400 transition-colors" />
-                <span>Admin</span>
+                <Lock className="h-3 w-3" />
+                <span className="sr-only">Admin</span>
               </Link>
             </div>
           </div>
-
-        </div>
-
-        {/* Subtle Bottom Admin Bar */}
-        <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] font-mono text-emerald-200/50 px-2">
-          <span>PORTFOLIO_SYSTEM // V2.4 &bull; NEW DELHI</span>
-          <Link
-            href="/admin"
-            className="inline-flex items-center gap-2 py-1 px-3 rounded-full hover:text-emerald-300 hover:bg-emerald-950/80 border border-transparent hover:border-emerald-800/60 transition-colors group"
-          >
-            <Shield className="w-3.5 h-3.5 text-emerald-400/80 group-hover:text-emerald-300" />
-            <span>Admin Portal</span>
-          </Link>
         </div>
       </div>
     </footer>

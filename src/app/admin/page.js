@@ -158,9 +158,7 @@ export default function AdminPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           slug: id,
-          visible: nextState,
-          username: "ansm",
-          password: "ansmfx32004"
+          visible: nextState
         })
       });
 
@@ -198,9 +196,7 @@ export default function AdminPage() {
         credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          visibility: newMap,
-          username: "ansm",
-          password: "ansmfx32004"
+          visibility: newMap
         })
       });
 

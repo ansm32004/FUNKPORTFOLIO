@@ -3,43 +3,47 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ArrowUpRight, Folder, Eye, EyeOff, ShieldCheck } from "lucide-react";
+import { Pin, SectionHeading, Accent } from "./Stationery";
 import Link from "next/link";
 
 const PROJECTS = [
   {
     id: "employee-dash",
-    title: "💼 Employee Dash — Unified Growth",
+    title: "Employee Dash",
     category: "L&D Platform",
     subtitle: "Connecting learning, coaching, and reflection",
     description:
       "A desktop-first employee growth platform that unifies long-term progression, task execution, modular learning, coaching, and contextual AI reflection into a coherent workspace.",
-    tag: "Product Concept",
-    stickyColor: "bg-[#6744C3] text-white",
-    angle: "rotate-1",
+    tag: "Concept",
+    note: "bg-note-blue",
+    year: "2026",
+    angle: "rotate-[0.6deg]",
     link: "/case-study/employee-dash"
   },
   {
     id: "govt-election",
-    title: "🗳️ Govt Election Event Reporting",
+    title: "Election Event Reporting",
     category: "GIS Analytics",
     subtitle: "Geospatial monitoring & verification at scale",
     description:
       "A high-scale geospatial analytics dashboard designed to validate field report authenticity, detect outside-boundary location activity, and track activity density across 4 administrative tiers.",
-    tag: "Featured Case Study",
-    stickyColor: "bg-[#0F172A] text-white",
-    angle: "-rotate-1",
+    tag: "Case study",
+    note: "bg-note-yellow",
+    year: "2025",
+    angle: "-rotate-[0.8deg]",
     link: "/case-study/govt-election"
   },
   {
     id: "vammy",
-    title: "🦇 Vammy — The Finance Buddy",
+    title: "Vammy",
     category: "Mobile & FinTech",
     subtitle: "A finance tracking app that actually cares",
     description:
       "Modern, intuitive finance tracking mobile app built around Vammy, a vampire mascot gauge that gives real-time visual feedback on monthly spending & budgets.",
-    tag: "Featured Case Study",
-    stickyColor: "bg-[#2563EB] text-white",
-    angle: "rotate-1",
+    tag: "Case study",
+    note: "bg-note-pink",
+    year: "2025",
+    angle: "rotate-[0.4deg]",
     link: "/case-study/vammy"
   }
 ];
@@ -104,9 +108,7 @@ export default function SelectedWork({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           slug: projectId,
-          visible: targetVisible,
-          username: "ansm",
-          password: "ansmfx32004"
+          visible: targetVisible
         })
       });
 
@@ -132,37 +134,29 @@ export default function SelectedWork({
   });
 
   return (
-    <section id="work" className="relative z-10 py-24 px-6 sm:px-12 md:px-20 bg-cutting-mat border-t border-emerald-950/80">
+    <section id="work" className="relative z-10 py-16 sm:py-24 px-4 sm:px-12 md:px-20 bg-cutting-mat">
       <div className="max-w-7xl mx-auto">
-        {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 pb-6 border-b border-emerald-800/40 gap-6">
-          <div>
-            <div className="flex flex-wrap items-center gap-3 text-xs font-bold uppercase tracking-wider text-emerald-400 mb-2">
-              <div className="flex items-center gap-2">
-                <Folder className="w-4 h-4" />
-                <span>01 // Selected Work</span>
-              </div>
-
+        <SectionHeading
+          index="01"
+          label="Selected work"
+          title={<>Things I&apos;ve built <Accent>&amp; questioned</Accent></>}
+          aside={
+            <>
+              <span className="block max-w-sm md:ml-auto">
+                Each one shipped with purpose, a little humour, and an unhealthy attention to 8px spacing.
+              </span>
               {isAdmin && (
-                <div className="flex items-center gap-2">
-                  <Link
-                    href="/admin"
-                    className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/30 transition-colors"
-                  >
-                    <ShieldCheck className="w-3 h-3 text-emerald-400" />
-                    Admin Active &bull; Manage in Panel
-                  </Link>
-                </div>
+                <Link
+                  href="/admin"
+                  className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-white/15 px-3 py-1 text-[12px] text-chalk transition-colors hover:bg-white/10"
+                >
+                  <ShieldCheck className="h-3.5 w-3.5" />
+                  Admin · manage in panel
+                </Link>
               )}
-            </div>
-            <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
-              Things I&apos;ve Built &amp; Questioned
-            </h2>
-          </div>
-          <p className="text-sm sm:text-base text-emerald-100/70 max-w-md font-medium leading-relaxed">
-            Every project crafted with purpose, humor, and an unhealthy attention to 8px spacing.
-          </p>
-        </div>
+            </>
+          }
+        />
 
         {/* Empty State if All Hidden for Public */}
         {displayedProjects.length === 0 && (
@@ -186,7 +180,7 @@ export default function SelectedWork({
         )}
 
         {/* Projects Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 gap-8 sm:gap-10 md:grid-cols-2 lg:grid-cols-3">
           {displayedProjects.map((project, index) => {
             const isHidden = visibility[project.id] === false;
             const isBusy = updatingSlug === project.id;
@@ -194,20 +188,17 @@ export default function SelectedWork({
             const wrapperProps = project.link ? { href: project.link } : {};
 
             return (
-              <CardWrapper key={project.id} {...wrapperProps} className="block">
+              <CardWrapper key={project.id} {...wrapperProps} className="block h-full">
                 <motion.div
-                  initial={{ opacity: 0, y: 30 }}
+                  initial={{ opacity: 0, y: 24 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: "-60px" }}
-                  transition={{ duration: 0.6, delay: index * 0.12 }}
-                  className={`group relative rounded-3xl bg-white p-6 sm:p-7 md:p-8 shadow-2xl border border-slate-200 transform ${project.angle} hover:rotate-0 hover:scale-[1.02] transition-transform duration-300 cursor-pointer ${
-                    isAdmin && isHidden ? "ring-2 ring-amber-400" : ""
+                  transition={{ duration: 0.7, delay: index * 0.08, ease: [0.16, 1, 0.3, 1] }}
+                  className={`paper group relative flex h-full cursor-pointer flex-col p-5 sm:p-7 transition-transform duration-500 ease-out ${project.angle} hover:-translate-y-1 hover:rotate-0 ${
+                    isAdmin && isHidden ? "ring-2 ring-note-yellow" : ""
                   }`}
                 >
-                  {/* Paper Clip Accent */}
-                  <div className="absolute -top-3 left-8 w-8 h-8 rounded-full bg-slate-100 border border-slate-300 shadow-sm flex items-center justify-center text-slate-500">
-                    <span className="w-2 h-2 rounded-full bg-slate-700" />
-                  </div>
+                  <Pin className="-top-2 left-1/2 -translate-x-1/2" />
 
                   {/* ADMIN DIRECT UNHIDE / HIDE CONTROL BAR */}
                   {isAdmin && (
@@ -243,41 +234,35 @@ export default function SelectedWork({
                     </div>
                   )}
 
-                  {/* Top Metadata Header Bar */}
-                  <div className="flex items-center justify-between gap-3 mb-5 pt-1 min-w-0">
-                    <span className={`text-[11px] font-bold px-3 py-1 rounded-full shadow-xs whitespace-nowrap shrink-0 ${project.stickyColor}`}>
-                      {project.tag}
+                  {/* Cover: a sticky-note swatch with the project number */}
+                  <div className={`note-texture relative mb-7 flex aspect-[16/10] items-end justify-between rounded-[3px] p-5 ${project.note}`}>
+                    <span className="font-serif text-[72px] italic leading-none text-ink/80">
+                      {String(index + 1).padStart(2, "0")}
                     </span>
-                    <span
-                      className="text-[11px] font-mono font-bold text-slate-400 uppercase tracking-wider text-right truncate min-w-0"
-                      title={project.category}
-                    >
-                      {project.category}
-                    </span>
+                    <span className="text-[12px] text-ink/60">{project.category}</span>
                   </div>
 
-                  {/* Title & Description */}
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-2xl font-extrabold text-slate-900 group-hover:text-blue-600 transition-colors">
-                        {project.title}
-                      </h3>
-                      <div className="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 group-hover:bg-slate-900 group-hover:text-white transition-all shrink-0">
-                        <ArrowUpRight className="w-4 h-4" />
-                      </div>
+                  <div className="flex items-center justify-between text-[12px] text-ink-3">
+                    <span>{project.tag}</span>
+                    <span className="tabular-nums">{project.year}</span>
+                  </div>
+
+                  <h3 className="mt-3 flex items-start justify-between gap-4 text-[26px] font-medium leading-tight tracking-[-0.02em] text-ink">
+                    {project.title}
+                    <ArrowUpRight className="mt-1 h-5 w-5 shrink-0 text-ink-3 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-pin" />
+                  </h3>
+                  <p className="mt-1 text-[15px] text-ink-2">{project.subtitle}</p>
+                  <p className="mt-4 text-[14px] leading-relaxed text-ink-3">{project.description}</p>
+
+                  <div className="mt-auto pt-6">
+                    <div className="relative h-11 border-t border-dashed border-rule pt-3 font-handwriting text-[19px] text-ink-3">
+                      <span className="absolute transition-opacity duration-300 group-hover:opacity-0">
+                        read the case study →
+                      </span>
+                      <span className="absolute text-ink opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                        I worked way too hard on this →
+                      </span>
                     </div>
-                    <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">
-                      {project.subtitle}
-                    </p>
-                    <p className="text-sm text-slate-600 font-medium leading-relaxed">
-                      {project.description}
-                    </p>
-                  </div>
-
-                  {/* Hover Tooltip Microcopy */}
-                  <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] font-bold text-slate-400 opacity-80 group-hover:opacity-100 transition-opacity">
-                    <span>Click me.</span>
-                    <span className="italic">I worked way too hard on this.</span>
                   </div>
                 </motion.div>
               </CardWrapper>

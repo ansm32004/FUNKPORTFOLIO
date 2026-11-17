@@ -1,39 +1,20 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  Home,
-  Briefcase,
-  Sliders,
-  Cpu,
-  Compass,
-  Camera,
-  MessageSquareQuote,
-  Mail,
-  ChevronRight,
-  Menu,
-  X,
-  Sparkles,
-  Navigation,
-} from "lucide-react";
-
 const SECTIONS = [
-  { id: "hero", label: "Intro & Overview", num: "01", icon: Home, short: "Hero" },
-  { id: "work", label: "Selected Work", num: "02", icon: Briefcase, short: "Work" },
-  { id: "experience", label: "Motion Timeline", num: "03", icon: Sliders, short: "Timeline" },
-  { id: "skills", label: "Synthesizer Deck", num: "04", icon: Cpu, short: "Skills" },
-  { id: "process", label: "Work Process", num: "05", icon: Compass, short: "Process" },
-  { id: "photography", label: "Lens Archive", num: "06", icon: Camera, short: "Photos" },
-  { id: "reviews", label: "Client Reviews", num: "07", icon: MessageSquareQuote, short: "Reviews" },
-  { id: "contact", label: "Initiate Contact", num: "08", icon: Mail, short: "Contact" },
+  { id: "hero", label: "Intro", num: "00" },
+  { id: "work", label: "Selected work", num: "01" },
+  { id: "experience", label: "Experience", num: "02" },
+  { id: "skills", label: "Skills", num: "03" },
+  { id: "process", label: "Process", num: "04" },
+  { id: "photography", label: "Photography", num: "05" },
+  { id: "reviews", label: "Kind words", num: "06" },
+  { id: "contact", label: "Contact", num: "07" },
 ];
 
 export default function SideNav() {
   const [activeSection, setActiveSection] = useState("hero");
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [isDockHovered, setIsDockHovered] = useState(false);
-  const [hoveredSection, setHoveredSection] = useState(null);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   // Scroll section tracking via IntersectionObserver
   useEffect(() => {
@@ -68,198 +49,97 @@ export default function SideNav() {
     }
   };
 
-  const isVisible = isDockHovered || isExpanded;
+  const current = SECTIONS.find((s) => s.id === activeSection) || SECTIONS[0];
 
   return (
-    <aside
-      aria-label="Side navigation"
-      onMouseEnter={() => setIsDockHovered(true)}
-      onMouseLeave={() => {
-        setIsDockHovered(false);
-      }}
-      className="fixed right-0 top-1/2 -translate-y-1/2 z-50 flex items-center select-none pl-6 pr-3 py-6"
-    >
-      
-      {/* TUCKED REVEAL HANDLE — FUNKY LIGHT THEME (VISIBLE WHEN DOCK IS HIDDEN) */}
-      <AnimatePresence>
-        {!isVisible && (
-          <motion.button
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 15 }}
-            onClick={() => {
-              setIsDockHovered(true);
-              setIsExpanded(true);
-            }}
-            className="absolute right-0 top-1/2 -translate-y-1/2 bg-white/95 text-slate-900 border border-r-0 border-slate-200/90 py-3.5 px-2 rounded-l-2xl shadow-xl shadow-slate-900/10 hover:bg-white hover:text-blue-600 transition-all flex flex-col items-center gap-1.5 cursor-pointer group"
-            title="Click or hover to reveal Navigation"
-          >
-            <span className="w-2 h-2 rounded-full bg-blue-600" />
-            <Navigation className="w-4 h-4 text-slate-800 group-hover:text-blue-600 group-hover:scale-110 transition-all" />
-            <span className="text-[9px] font-mono font-extrabold text-slate-700 writing-vertical uppercase tracking-wider">
-              NAV
-            </span>
-          </motion.button>
+    <>
+      {/* Phones: floating pill + pinned paper menu */}
+      <div className="fixed inset-x-0 bottom-4 z-50 flex justify-center px-4 md:hidden">
+        {menuOpen && (
+          <button
+            aria-label="Close menu"
+            onClick={() => setMenuOpen(false)}
+            className="fixed inset-0 bg-black/40"
+          />
         )}
-      </AnimatePresence>
-
-      {/* FLOATING LIGHT THEME NAVIGATION DOCK & DRAWER */}
-      <motion.div
-        animate={{
-          x: isVisible ? 0 : 80,
-          opacity: isVisible ? 1 : 0,
-          scale: isVisible ? 1 : 0.95,
-        }}
-        transition={{ type: "spring", stiffness: 350, damping: 28 }}
-        className="flex items-center"
-      >
-        {/* EXPANDED SIDE DRAWER NAVIGATION PANEL — LIGHT THEME FUNKY VIBE */}
-        <AnimatePresence>
-          {isExpanded && (
-            <motion.div
-              initial={{ opacity: 0, x: 40, scale: 0.92 }}
-              animate={{ opacity: 1, x: 0, scale: 1 }}
-              exit={{ opacity: 0, x: 30, scale: 0.95 }}
-              transition={{ type: "spring", stiffness: 300, damping: 25 }}
-              className="mr-3 bg-white/95 backdrop-blur-xl border border-slate-200/90 text-slate-900 rounded-3xl p-4 sm:p-5 shadow-2xl shadow-slate-900/15 w-64 sm:w-72 relative overflow-hidden"
+        <div className="relative w-full max-w-xs">
+          {menuOpen && (
+            <nav
+              aria-label="Sections"
+              className="paper absolute inset-x-0 bottom-full mb-3 origin-bottom -rotate-1 px-2 py-3"
             >
-              {/* Header */}
-              <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-100">
-                <div className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-blue-600">
-                  <Sparkles className="w-3.5 h-3.5 text-blue-600" />
-                  <span>Quick Navigation</span>
-                </div>
-                <button
-                  onClick={() => setIsExpanded(false)}
-                  className="w-7 h-7 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 flex items-center justify-center transition-colors cursor-pointer"
-                  title="Close side menu"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-
-              {/* Links List */}
-              <div className="space-y-1.5">
-                {SECTIONS.map((sec) => {
-                  const IconComponent = sec.icon;
-                  const isActive = activeSection === sec.id;
-                  return (
+              <span aria-hidden className="absolute -top-2 left-1/2 h-4 w-4 -translate-x-1/2 rounded-full bg-pin shadow-[0_2px_4px_rgb(0_0_0/0.35)]" />
+              <ol>
+                {SECTIONS.map((sec) => (
+                  <li key={sec.id}>
                     <button
-                      key={sec.id}
                       onClick={() => {
+                        setMenuOpen(false);
                         scrollToSection(sec.id);
-                        setIsExpanded(false);
                       }}
-                      className={`w-full text-left px-3.5 py-2.5 rounded-2xl flex items-center justify-between text-xs font-semibold transition-all group cursor-pointer ${
-                        isActive
-                          ? "bg-slate-900 text-white shadow-md font-bold"
-                          : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                      className={`flex w-full items-center gap-3 rounded-[4px] px-3 py-2.5 text-left text-[15px] ${
+                        activeSection === sec.id ? "bg-paper-2 text-ink" : "text-ink-2"
                       }`}
                     >
-                      <div className="flex items-center gap-3">
-                        <span
-                          className={`text-[10px] font-mono font-bold ${
-                            isActive ? "text-blue-400" : "text-blue-600 group-hover:text-blue-700"
-                          }`}
-                        >
-                          {sec.num}
-                        </span>
-                        <IconComponent
-                          className={`w-4 h-4 ${
-                            isActive ? "text-white" : "text-slate-500 group-hover:text-slate-900"
-                          }`}
-                        />
-                        <span>{sec.label}</span>
-                      </div>
-
-                      {isActive && (
-                        <span className="w-2 h-2 rounded-full bg-blue-400" />
-                      )}
+                      <span className="w-5 font-mono text-[12px] tabular-nums text-ink-3">{sec.num}</span>
+                      {sec.label}
                     </button>
-                  );
-                })}
-              </div>
-
-              {/* Drawer Footer Status */}
-              <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500 font-mono">
-                <span className="flex items-center gap-1.5 font-bold">
-                  <span className="w-2 h-2 rounded-full bg-blue-600" />
-                  <span>ACTIVE: #{activeSection.toUpperCase()}</span>
-                </span>
-                <span className="text-[10px] text-slate-400 font-bold">8 SECTIONS</span>
-              </div>
-            </motion.div>
+                  </li>
+                ))}
+              </ol>
+            </nav>
           )}
-        </AnimatePresence>
-
-        {/* COMPACT FLOATING DOCK BAR — LIGHT THEME FUNKY VIBE */}
-        <div className="flex flex-col items-center gap-2 bg-white/95 backdrop-blur-md p-2 rounded-full border border-slate-200/90 shadow-xl shadow-slate-900/10">
-          
-          {/* Toggle Drawer Button */}
           <button
-            onClick={() => setIsExpanded(!isExpanded)}
-            className={`w-9 h-9 rounded-full flex items-center justify-center transition-all cursor-pointer ${
-              isExpanded
-                ? "bg-blue-600 text-white rotate-180"
-                : "bg-slate-900 text-white hover:bg-slate-800"
-            }`}
-            title={isExpanded ? "Close Drawer" : "Open Navigation Drawer"}
+            onClick={() => setMenuOpen((o) => !o)}
+            aria-expanded={menuOpen}
+            className="relative mx-auto flex w-fit items-center gap-3 rounded-full bg-paper py-2.5 pl-4 pr-5 text-[14px] text-ink shadow-[0_8px_24px_-6px_rgb(0_0_0/0.55)]"
           >
-            {isExpanded ? <ChevronRight className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+            <span className="flex flex-col gap-[3px]" aria-hidden>
+              <span className={`block h-px w-3.5 bg-ink transition-transform ${menuOpen ? "translate-y-[2px] rotate-45" : ""}`} />
+              <span className={`block h-px w-3.5 bg-ink transition-transform ${menuOpen ? "-translate-y-[2px] -rotate-45" : ""}`} />
+            </span>
+            <span className="font-mono text-[12px] tabular-nums text-ink-3">{current.num}</span>
+            {current.label}
           </button>
-
-          <div className="w-5 h-[1px] bg-slate-200 my-0.5" />
-
-          {/* Section Dots */}
-          <div className="flex flex-col gap-2 relative">
-            {SECTIONS.map((sec) => {
-              const isActive = activeSection === sec.id;
-              const IconComponent = sec.icon;
-
-              return (
-                <div
-                  key={sec.id}
-                  className="relative flex items-center justify-center"
-                  onMouseEnter={() => setHoveredSection(sec.id)}
-                  onMouseLeave={() => setHoveredSection(null)}
-                >
-                  {/* FLOATING HOVER TOOLTIP CARD — LIGHT THEME */}
-                  <AnimatePresence>
-                    {hoveredSection === sec.id && !isExpanded && (
-                      <motion.div
-                        initial={{ opacity: 0, x: -10, scale: 0.9 }}
-                        animate={{ opacity: 1, x: -18, scale: 1 }}
-                        exit={{ opacity: 0, x: -8, scale: 0.95 }}
-                        transition={{ duration: 0.15 }}
-                        className="absolute right-full top-1/2 -translate-y-1/2 pointer-events-none whitespace-nowrap bg-white text-slate-900 text-xs font-extrabold px-3 py-1.5 rounded-xl border border-slate-200 shadow-xl shadow-slate-900/10 flex items-center gap-2 z-50"
-                      >
-                        <span className="text-blue-600 font-mono text-[10px] font-bold">{sec.num}</span>
-                        <span>{sec.label}</span>
-                        <div className="w-2 h-2 rotate-45 bg-white border-t border-r border-slate-200 absolute -right-1 top-1/2 -translate-y-1/2" />
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-
-                  {/* Section Dot / Pill */}
-                  <button
-                    onClick={() => scrollToSection(sec.id)}
-                    className={`relative flex items-center justify-center transition-all duration-300 cursor-pointer ${
-                      isActive
-                        ? "w-8 h-8 rounded-full bg-slate-900 text-white font-bold shadow-md shadow-slate-900/20 scale-110"
-                        : "w-7 h-7 rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-900 hover:scale-105"
-                    }`}
-                    aria-label={`Jump to ${sec.label}`}
-                  >
-                    <IconComponent className={isActive ? "w-4 h-4 text-blue-400" : "w-3.5 h-3.5"} />
-                  </button>
-                </div>
-              );
-            })}
-          </div>
-
         </div>
-      </motion.div>
+      </div>
 
+    <aside
+      aria-label="Section navigation"
+      className="fixed right-5 top-1/2 z-50 hidden -translate-y-1/2 select-none md:block"
+    >
+      <ol className="flex flex-col items-end gap-1">
+        {SECTIONS.map((sec) => {
+          const isActive = activeSection === sec.id;
+          return (
+            <li key={sec.id}>
+              <button
+                onClick={() => scrollToSection(sec.id)}
+                aria-label={`Jump to ${sec.label}`}
+                aria-current={isActive ? "true" : undefined}
+                className="group flex cursor-pointer items-center gap-3 py-1"
+              >
+                <span
+                  className={`whitespace-nowrap rounded-full bg-paper px-2.5 py-0.5 text-[12px] text-ink shadow-[0_4px_12px_-4px_rgb(0_0_0/0.5)] transition-all duration-200 ${
+                    isActive
+                      ? "translate-x-0 opacity-100"
+                      : "pointer-events-none translate-x-1 opacity-0 group-hover:translate-x-0 group-hover:opacity-100"
+                  }`}
+                >
+                  <span className="mr-1.5 tabular-nums text-ink-3">{sec.num}</span>
+                  {sec.label}
+                </span>
+                <span
+                  className={`block h-px transition-all duration-300 ${
+                    isActive ? "w-6 bg-chalk" : "w-3 bg-white/35 group-hover:w-5 group-hover:bg-white/70"
+                  }`}
+                />
+              </button>
+            </li>
+          );
+        })}
+      </ol>
     </aside>
+    </>
   );
 }

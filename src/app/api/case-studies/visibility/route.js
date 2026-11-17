@@ -3,7 +3,6 @@ import { revalidatePath } from "next/cache";
 import {
   SESSION_COOKIE_NAME,
   validateSessionToken,
-  validateCredentials,
 } from "@/lib/auth";
 import {
   getVisibility,
@@ -49,22 +48,14 @@ export async function POST(request) {
   try {
     const cookieStore = await cookies();
     const sessionCookie = cookieStore.get(SESSION_COOKIE_NAME);
-    let isAdmin = Boolean(validateSessionToken(sessionCookie?.value));
+    const isAdmin = Boolean(validateSessionToken(sessionCookie?.value));
 
-    // Parse request payload
     const body = await request.json().catch(() => ({}));
-    const { slug, visible, visibility: newVisibilityMap, username, password } = body || {};
-
-    // Authorization fallback if cookie is absent but credentials are provided
-    if (!isAdmin && username && password) {
-      if (validateCredentials(username, password)) {
-        isAdmin = true;
-      }
-    }
+    const { slug, visible, visibility: newVisibilityMap } = body || {};
 
     if (!isAdmin) {
       return new Response(
-        JSON.stringify({ success: false, error: "Unauthorized. Admin credentials required." }),
+        JSON.stringify({ success: false, error: "Unauthorized. Sign in as admin first." }),
         { status: 401, headers: NO_CACHE_HEADERS }
       );
     }

@@ -2,43 +2,45 @@
 
 import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
+import { ArrowDownRight } from "lucide-react";
+import { Pin, Tape, Accent } from "./Stationery";
 
-// Anshuman Mishra Logo Mark
-function BrandLogo({ className = "w-7 h-7" }) {
-  return (
-    <div className={`${className} rounded-full bg-slate-900 flex items-center justify-center text-white font-bold text-xs shadow-xs tracking-tighter`}>
-      AM
-    </div>
-  );
-}
+const EASE = [0.16, 1, 0.3, 1];
 
-// Metallic Paperclip SVG
-function PaperclipIcon({ className = "w-8 h-8" }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="#64748B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48" />
-    </svg>
-  );
-}
+const NAV = [
+  { href: "#work", label: "Work" },
+  { href: "#experience", label: "Experience" },
+  { href: "#skills", label: "Skills" },
+  { href: "#process", label: "Process" },
+  { href: "#contact", label: "Contact" },
+];
 
-// Wooden/Metal Binder Clip SVG
-function BinderClipIcon({ className = "w-8 h-8" }) {
-  return (
-    <svg className={className} viewBox="0 0 32 32" fill="none">
-      <path d="M12 4L14 14H18L20 4" stroke="#64748B" strokeWidth="2.5" strokeLinecap="round" />
-      <rect x="8" y="14" width="16" h="10" rx="2" fill="#78350F" stroke="#451A03" strokeWidth="1.5" />
-      <rect x="10" y="16" width="12" h="6" rx="1" fill="#92400E" />
-    </svg>
-  );
-}
+// Each discipline gets its own highlighter colour + tilt on hover.
+const DISCIPLINES = [
+  { label: "Product design", mark: "bg-note-yellow", tilt: "group-hover:-rotate-3" },
+  { label: "Frontend", mark: "bg-note-blue", tilt: "group-hover:rotate-2" },
+  { label: "AI", mark: "bg-note-pink", tilt: "group-hover:-rotate-6" },
+  { label: "Motion", mark: "bg-note-yellow", tilt: "group-hover:rotate-3" },
+  { label: "Branding", mark: "bg-note-blue", tilt: "group-hover:-rotate-2" },
+];
 
-// Interactive Hover Word Component (Clean Semi-Bold Typography with Subtle Twist & Color Shift)
-function InteractiveWord({ children, className = "", hoverColor = "hover:text-blue-600", rotateDeg = "hover:-rotate-2" }) {
+// Playful hover on a word: lifts, tilts, and changes ink.
+function HoverWord({ children, className = "", tilt = "hover:-rotate-2", color = "hover:text-pin" }) {
   return (
     <span
-      className={`inline-block transition-all duration-300 ease-out cursor-pointer hover:scale-105 ${rotateDeg} ${hoverColor} ${className}`}
+      className={`inline-block cursor-default transition-[transform,color] duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:-translate-y-1 hover:scale-[1.06] ${tilt} ${color} ${className}`}
     >
       {children}
+    </span>
+  );
+}
+
+function Monogram({ className = "" }) {
+  return (
+    <span
+      className={`flex h-8 w-8 items-center justify-center rounded-full bg-ink text-[11px] font-semibold tracking-tight text-paper ${className}`}
+    >
+      AM
     </span>
   );
 }
@@ -46,205 +48,200 @@ function InteractiveWord({ children, className = "", hoverColor = "hover:text-bl
 export default function HeroSection() {
   const containerRef = useRef(null);
 
-  // Scroll Driven Animations for 3D Perspective Lift
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end start"],
   });
 
-  const paperScale = useTransform(scrollYProgress, [0, 0.8], [1, 0.95]);
-  const paperY = useTransform(scrollYProgress, [0, 0.8], [0, 40]);
-  const paperRotateX = useTransform(scrollYProgress, [0, 0.8], [0, 5]);
+  const paperScale = useTransform(scrollYProgress, [0, 0.8], [1, 0.96]);
+  const paperY = useTransform(scrollYProgress, [0, 0.8], [0, 32]);
+  const paperRotateX = useTransform(scrollYProgress, [0, 0.8], [0, 4]);
 
   return (
-    <section id="hero" ref={containerRef} className="relative w-full overflow-hidden select-none m-0 p-0 perspective-[1200px]">
-
-      {/* 1. TOP SECTION: Full-Bleed Elevated White Paper Sheet (3D Scroll Perspective Lift) */}
+    <section
+      id="hero"
+      ref={containerRef}
+      className="relative m-0 w-full overflow-hidden p-0 perspective-[1200px]"
+    >
+      {/* Paper sheet */}
       <motion.div
-        style={{
-          scale: paperScale,
-          y: paperY,
-          rotateX: paperRotateX,
-          transformOrigin: "top center",
-        }}
-        className="relative w-full bg-white pt-8 pb-20 px-6 sm:px-12 md:px-20 rounded-b-[40px] sm:rounded-b-[56px] shadow-elevated-paper z-20"
+        style={{ scale: paperScale, y: paperY, rotateX: paperRotateX, transformOrigin: "top center" }}
+        className="relative z-20 w-full rounded-b-[28px] bg-paper px-5 pb-16 pt-5 shadow-elevated-paper sm:px-12 sm:pb-24 sm:pt-7 md:px-20"
       >
-        {/* Paper Sheet Header Navbar */}
-        <div className="max-w-7xl mx-auto flex items-center justify-between pb-16">
-          {/* Logo */}
-          <a href="#" className="flex items-center gap-2.5 font-bold text-slate-900 tracking-tight group">
-            <BrandLogo className="w-8 h-8 group-hover:rotate-12 transition-transform duration-300" />
-            <span className="font-bold text-xl text-slate-900 group-hover:text-blue-600 transition-colors">
-              Anshuman Mishra
-            </span>
+        {/* Header */}
+        <header className="mx-auto flex max-w-7xl items-center justify-between pb-14 sm:pb-28">
+          <a href="#" className="flex items-center gap-3 text-ink">
+            <Monogram />
+            <span className="text-[15px] font-semibold tracking-tight">Anshuman Mishra</span>
           </a>
 
-          {/* Nav Links */}
-          <nav className="hidden md:flex items-center gap-9 text-sm font-semibold text-slate-600">
-            <a href="#work" className="hover:text-slate-900 transition-colors">Selected Work</a>
-            <a href="#about" className="hover:text-slate-900 transition-colors">Who Am I?</a>
-            <a href="#experience" className="hover:text-slate-900 transition-colors">Experience</a>
-            <a href="#skills" className="hover:text-slate-900 transition-colors">Skills</a>
-            <a href="#contact" className="hover:text-slate-900 transition-colors">Contact</a>
+          <nav className="hidden items-center gap-8 text-[14px] text-ink-2 md:flex">
+            {NAV.map((item) => (
+              <a key={item.href} href={item.href} className="transition-colors hover:text-ink">
+                {item.label}
+              </a>
+            ))}
           </nav>
 
-          {/* Black Pill Button */}
           <a
             href="#contact"
-            className="px-5 py-2 text-xs font-semibold text-white bg-slate-900 hover:bg-blue-600 rounded-full transition-all shadow-xs hover:scale-105"
+            className="rounded-full border border-ink/15 px-4 py-2 text-[13px] font-medium text-ink transition-colors hover:border-ink hover:bg-ink hover:text-paper"
           >
-            Get In Touch
+            Get in touch
           </a>
-        </div>
+        </header>
 
-        {/* Central Hero Pitch inside White Paper (Clean Semi-Bold + Subtle Funkiness) */}
-        <div className="max-w-4xl mx-auto text-center pt-2 pb-6">
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
+        {/* Pitch */}
+        <div className="mx-auto max-w-5xl text-center">
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            className="text-4xl sm:text-6xl md:text-7xl font-semibold text-slate-900 tracking-tight leading-[1.15]"
+            transition={{ duration: 0.6, ease: EASE }}
+            className="mb-6 inline-flex items-center gap-2 text-[13px] text-ink-2 sm:mb-8"
           >
-            I make{" "}
-            <InteractiveWord hoverColor="hover:text-blue-600" rotateDeg="hover:-rotate-2" className="font-semibold text-slate-900">
-              pixels
-            </InteractiveWord>{" "}
-            behave. <br />
-            <span className="text-slate-500 font-normal">
+            <span className="h-1.5 w-1.5 rounded-full bg-pin" />
+            Product designer &amp; developer · New Delhi
+          </motion.p>
+
+          <motion.h1
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: EASE }}
+            className="text-[44px] font-medium leading-[1.02] tracking-[-0.04em] text-ink sm:text-7xl md:text-[96px]"
+          >
+            I make <HoverWord tilt="hover:-rotate-3">pixels</HoverWord>{" "}
+            <HoverWord tilt="hover:rotate-2" color="hover:text-ink-2">behave.</HoverWord>
+            <br />
+            <span className="text-ink-3">
               Sometimes{" "}
-              <InteractiveWord hoverColor="hover:text-rose-500" rotateDeg="hover:rotate-2" className="font-semibold text-slate-800">
-                people
-              </InteractiveWord>{" "}
-              too. 😉
+              <HoverWord tilt="hover:rotate-3" color="hover:text-pin" className="text-ink">
+                <Accent>people</Accent>
+              </HoverWord>{" "}
+              too.
             </span>
           </motion.h1>
 
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-            className="mt-6 text-base sm:text-lg font-normal text-slate-500 max-w-2xl mx-auto leading-relaxed"
+            transition={{ duration: 0.8, delay: 0.1, ease: EASE }}
+            className="mx-auto mt-8 max-w-xl text-[17px] leading-relaxed text-ink-2"
           >
-            I design products, build them, break them, redesign them, question every pixel, and somehow end up shipping things people actually enjoy using.
+            I design products, build them, break them, redesign them, question every pixel — and
+            somehow end up shipping things people actually enjoy using.
           </motion.p>
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="mt-3 text-xs sm:text-sm font-medium text-slate-400 max-w-xl mx-auto leading-normal"
+            transition={{ duration: 0.8, delay: 0.2, ease: EASE }}
+            className="mt-10 flex flex-col items-center gap-6"
           >
-            Currently mixing{" "}
-            <InteractiveWord hoverColor="hover:text-blue-600" className="font-medium text-slate-700">Product Design</InteractiveWord>,{" "}
-            <InteractiveWord hoverColor="hover:text-indigo-600" className="font-medium text-slate-700">Frontend</InteractiveWord>,{" "}
-            <InteractiveWord hoverColor="hover:text-purple-600" className="font-medium text-slate-700">AI</InteractiveWord>,{" "}
-            <InteractiveWord hoverColor="hover:text-rose-500" className="font-medium text-slate-700">Motion</InteractiveWord>,{" "}
-            <InteractiveWord hoverColor="hover:text-emerald-600" className="font-medium text-slate-700">Branding</InteractiveWord>, and a dangerous amount of caffeine ☕.
-          </motion.p>
+            <a
+              href="#work"
+              className="group inline-flex items-center gap-2 rounded-full bg-ink px-6 py-3 text-[14px] font-medium text-paper transition-colors hover:bg-black"
+            >
+              Judge my work
+              <ArrowDownRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:translate-y-0.5" />
+            </a>
 
-          <motion.a
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            href="#work"
-            className="mt-8 px-7 py-3 text-xs sm:text-sm font-semibold text-white bg-slate-900 hover:bg-blue-600 rounded-full transition-all duration-300 shadow-md hover:scale-105 hover:-rotate-1 inline-block"
-          >
-            Judge My Work
-          </motion.a>
+            <ul className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-[13px] text-ink-3">
+              {DISCIPLINES.map((d, i) => (
+                <li key={d.label} className="flex items-center gap-2">
+                  {i > 0 && <span className="text-rule">/</span>}
+                  <span className={`group relative inline-block cursor-default transition-transform duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-110 ${d.tilt}`}>
+                    <span
+                      aria-hidden
+                      className={`absolute -inset-x-1 bottom-0 top-1/2 -z-0 origin-left scale-x-0 rounded-[2px] opacity-80 transition-transform duration-300 group-hover:scale-x-100 ${d.mark}`}
+                    />
+                    <span className="relative transition-colors group-hover:text-ink">{d.label}</span>
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </motion.div>
         </div>
       </motion.div>
 
-      {/* 2. BOTTOM SECTION: Full-Bleed Dark Green Cutting Mat Layer */}
-      <div className="relative w-full bg-cutting-mat pt-16 pb-32 px-6 sm:px-12 md:px-20 z-10">
-
-        {/* Slack Chat Popover Card */}
+      {/* Cutting mat */}
+      <div className="bg-cutting-mat relative z-10 w-full px-4 pb-20 pt-16 sm:px-12 sm:pb-28 sm:pt-24 md:px-20">
+        {/* Pinned welcome slip */}
         <motion.div
-          initial={{ opacity: 0, y: 50, scale: 0.85 }}
-          whileInView={{ opacity: 1, y: 0, scale: 1 }}
+          initial={{ opacity: 0, y: 24, rotate: -1 }}
+          whileInView={{ opacity: 1, y: 0, rotate: -1 }}
           viewport={{ once: true, margin: "-40px" }}
-          transition={{ type: "spring", stiffness: 220, damping: 16 }}
-          className="bg-white/95 backdrop-blur-md rounded-2xl p-4 shadow-2xl border border-slate-200/90 max-w-sm sm:max-w-md mx-auto relative z-30 mb-14 flex items-start gap-3.5 hover:scale-105 transition-transform duration-300 cursor-pointer"
+          transition={{ duration: 0.7, ease: EASE }}
+          className="paper relative z-30 mx-auto mb-14 flex max-w-md items-start gap-4 p-5 sm:mb-20"
         >
-          {/* User Avatar */}
-          <div className="w-10 h-10 rounded-xl bg-slate-900 text-white font-bold text-xs flex items-center justify-center shrink-0 shadow-xs border border-slate-800">
-            AM
-          </div>
-
-          <div className="flex-1 text-left">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-slate-900">Anshuman</span>
-              <span className="text-[10px] font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200 flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
-                <span>probably designing instead of sleeping</span>
-              </span>
+          <Pin className="-top-2 left-1/2 -translate-x-1/2" />
+          <Monogram className="mt-0.5 shrink-0" />
+          <div className="text-left">
+            <div className="flex flex-wrap items-baseline gap-x-2">
+              <span className="text-[14px] font-semibold text-ink">Anshuman</span>
+              <span className="text-[12px] text-ink-3">probably designing instead of sleeping</span>
             </div>
-            <p className="text-xs text-slate-600 font-medium leading-snug mt-1.5">
-              Welcome to the portfolio. <br />
-              <span className="text-rose-600 font-semibold">Warning:</span> This website contains excessive animations, questionable humour, and unhealthy attention to 8px spacing.
+            <p className="mt-1.5 text-[14px] leading-snug text-ink-2">
+              Welcome in. Fair warning: this site contains excessive animation, questionable humour,
+              and an unhealthy attention to 8px spacing.
             </p>
           </div>
         </motion.div>
 
-        {/* Central White Headline on Green Cutting Mat */}
+        {/* Mat headline */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.88, y: 30 }}
-          whileInView={{ opacity: 1, scale: 1, y: 0 }}
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-40px" }}
-          transition={{ type: "spring", stiffness: 180, damping: 15, delay: 0.1 }}
-          className="text-center max-w-2xl mx-auto mb-24 relative z-20"
+          transition={{ duration: 0.8, ease: EASE }}
+          className="relative z-20 mx-auto max-w-3xl text-center"
         >
-          <h2 className="text-3xl sm:text-5xl font-semibold text-white tracking-tight">
-            Built with ❤️ curiosity, ☕ caffeine, 😭 deadlines
+          <h2 className="text-4xl font-medium tracking-[-0.03em] text-chalk sm:text-6xl">
+            Built with curiosity, caffeine
+            <br className="hidden sm:block" /> <Accent className="text-note-yellow">&amp; deadlines.</Accent>
           </h2>
-          <p className="mt-4 text-sm sm:text-base text-emerald-100/75 font-medium max-w-md mx-auto leading-relaxed">
+          <p className="mx-auto mt-5 max-w-md text-[15px] text-chalk-2">
             Designed with intention. Crafted to be felt.
           </p>
         </motion.div>
 
-        {/* PINNED STICKY NOTES WITH 3D POP & ROTATE BLAST ENTRANCE */}
-
-        {/* 1. PINK STICKY NOTE (Bottom-Left Blast) */}
+        {/* Sticky notes */}
+        <div className="mx-auto mt-12 flex max-w-5xl items-start justify-between gap-4 sm:mt-16">
         <motion.div
-          initial={{ opacity: 0, x: -80, y: 40, rotate: -20, scale: 0.8 }}
-          whileInView={{ opacity: 1, x: 0, y: 0, rotate: -6, scale: 1 }}
+          initial={{ opacity: 0, y: 30, rotate: -10 }}
+          whileInView={{ opacity: 1, y: 0, rotate: -5 }}
           viewport={{ once: true, margin: "-40px" }}
-          transition={{ type: "spring", stiffness: 180, damping: 14, delay: 0.2 }}
-          className="hidden sm:block absolute bottom-12 left-8 md:left-20 w-64 md:w-72 z-20"
+          transition={{ duration: 0.9, delay: 0.15, ease: EASE }}
+          className="relative z-20 w-[46%] max-w-64 sm:w-60 md:w-64"
         >
-          <div className="relative bg-[#FF5C77] rounded-3xl p-7 shadow-cast-pink border border-rose-400/50 transform hover:rotate-2 hover:scale-110 transition-transform duration-300 cursor-pointer">
-            {/* Wooden/Metal Binder Clip (Top Right) */}
-            <div className="absolute -top-5 right-8 z-30 transform rotate-12">
-              <BinderClipIcon className="w-10 h-10" />
-            </div>
-
-            <p className="font-handwriting text-2xl text-rose-950 font-bold leading-snug pt-2">
-              "Trust the process." <br />
-              <span className="text-lg font-medium opacity-90">(unless the process was designed by me at 2 AM.)</span>
+          <div className="shadow-note note-texture relative aspect-square rounded-[2px] bg-note-pink p-4 sm:p-6 transition-transform duration-500 hover:-rotate-2">
+            <Pin className="-top-1.5 left-1/2 -translate-x-1/2" color="#2b2a27" />
+            <p className="pt-3 font-handwriting text-[20px] leading-[1.1] sm:text-[26px] text-[#4a1420]">
+              “Trust the process.”
+            </p>
+            <p className="mt-2 font-handwriting text-[15px] leading-snug sm:mt-3 sm:text-[19px] text-[#4a1420]/75">
+              (unless the process was designed by me at 2 AM.)
             </p>
           </div>
         </motion.div>
 
-        {/* 2. YELLOW STICKY NOTE (Bottom-Right Blast) */}
         <motion.div
-          initial={{ opacity: 0, x: 80, y: 40, rotate: 20, scale: 0.8 }}
-          whileInView={{ opacity: 1, x: 0, y: 0, rotate: 5, scale: 1 }}
+          initial={{ opacity: 0, y: 30, rotate: 10 }}
+          whileInView={{ opacity: 1, y: 0, rotate: 4 }}
           viewport={{ once: true, margin: "-40px" }}
-          transition={{ type: "spring", stiffness: 180, damping: 14, delay: 0.3 }}
-          className="hidden sm:block absolute bottom-12 right-8 md:right-20 w-64 md:w-72 z-20"
+          transition={{ duration: 0.9, delay: 0.25, ease: EASE }}
+          className="relative z-20 mt-8 w-[46%] max-w-64 sm:mt-10 sm:w-60 md:w-64"
         >
-          <div className="relative bg-[#EAF235] rounded-3xl p-7 shadow-cast-yellow border border-yellow-300/60 transform hover:-rotate-2 hover:scale-110 transition-transform duration-300 cursor-pointer">
-            {/* Metallic Paperclip (Top Left) */}
-            <div className="absolute -top-5 -left-3 z-30 transform -rotate-45">
-              <PaperclipIcon className="w-11 h-11 text-slate-600" />
-            </div>
-
-            <p className="font-handwriting text-2xl text-amber-950 font-bold leading-snug pt-2">
-              "Every designer has a favorite font." <br />
-              <span className="text-lg font-medium opacity-90">Mine changes every Tuesday.</span>
+          <div className="shadow-note note-texture relative aspect-square rounded-[2px] bg-note-yellow p-4 sm:p-6 transition-transform duration-500 hover:rotate-1">
+            <Tape className="-top-3 left-1/2 -translate-x-1/2" rotate={-4} width={72} />
+            <p className="pt-3 font-handwriting text-[20px] leading-[1.1] sm:text-[26px] text-[#3d3209]">
+              “Every designer has a favourite font.”
+            </p>
+            <p className="mt-2 font-handwriting text-[15px] leading-snug sm:mt-3 sm:text-[19px] text-[#3d3209]/75">
+              Mine changes every Tuesday.
             </p>
           </div>
         </motion.div>
-
+        </div>
       </div>
     </section>
   );
